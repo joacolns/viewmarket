@@ -14,5 +14,21 @@
     @apply text-lg mb-4;
   }
   .chart {
-    @apply w-full h-64 mb-4;
+    @apply w-full max-w-full h-96;
+  }
+  
+  .prediction {
+    @apply text-lg font-bold;
+  }
+  
+  .overbought {
+    @apply text-red-500;
+  }
+  
+  .oversold {
+    @apply text-green-500;
+  }
+  
+  .neutral {
+    @apply text-gray-500;
   }

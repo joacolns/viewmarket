@@ -9,11 +9,50 @@ import styles from './page.module.css';
 
 Chart.register(...registerables);
 
+function calculateRSI(prices, period = 14) {
+  const gains = [];
+  const losses = [];
+
+  for (let i = 1; i < prices.length; i++) {
+    const diff = prices[i] - prices[i - 1];
+    if (diff >= 0) {
+      gains.push(diff);
+      losses.push(0);
+    } else {
+      gains.push(0);
+      losses.push(Math.abs(diff));
+    }
+  }
+
+  let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
+
+  const rsiValues = [];
+  for (let i = period; i < prices.length; i++) {
+    const currentGain = gains[i - 1];
+    const currentLoss = losses[i - 1];
+
+    avgGain = ((avgGain * (period - 1)) + currentGain) / period;
+    avgLoss = ((avgLoss * (period - 1)) + currentLoss) / period;
+
+    if (avgLoss === 0) {
+      rsiValues.push(100);
+    } else {
+      const rs = avgGain / avgLoss;
+      const rsi = 100 - (100 / (1 + rs));
+      rsiValues.push(rsi);
+    }
+  }
+
+  return rsiValues;
+}
+
 function Home() {
   const [crypto, setCrypto] = useState('BTC');
   const [price, setPrice] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
+  const [prediction, setPrediction] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,9 +82,9 @@ function Home() {
           }
         }
 
-        // Fetch historical data from CryptoCompare
+        // Fetch historical data from CryptoCompare. Increased limit to 20 for RSI calculation
         const historyResponse = await axios.get(
-          `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=7`
+          `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=20`
         );
 
         if (historyResponse.data && 
@@ -57,15 +96,34 @@ function Home() {
             y: data.close
           }));
           setChartData(prices);
+
+          if (prices.length >= 15) {  // Asegúrate de tener al menos 15 datos para RSI
+            const rsi = calculateRSI(prices.map(item => item.y));
+            if (rsi.length > 0) {
+              const lastRSI = rsi[rsi.length - 1];
+              let prediction = 'Neutral';
+
+              if (lastRSI > 70) {
+                prediction = 'Overbought - Possible Price Drop';
+              } else if (lastRSI < 30) {
+                prediction = 'Oversold - Possible Price Rise';
+              }
+
+              setPrediction(prediction);
+            } else {
+              setPrediction('RSI calculation resulted in no data');
+            }
+          } else {
+            setPrediction('Not enough historical data for RSI calculation');
+          }
         } else {
-          // Aquí podrías intentar obtener datos históricos de CoinGecko o simplemente manejar el error
           setError(`Historical data not available or in unexpected format for ${crypto}.`);
         }
       } catch (err) {
+        console.error('Error fetching or processing data:', err.message || err);
         if (err.message.includes('400') || err.message.includes('Invalid')) {
           setError(`Cryptocurrency ${crypto} is not supported or invalid.`);
         } else {
-          console.error('Error fetching data:', err.message || err);
           setError('Failed to fetch data, please try again later.');
         }
       }
@@ -86,29 +144,29 @@ function Home() {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Esto permite que el gráfico se ajuste al contenedor sin mantener la proporción
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top', // Mantener la leyenda en la parte superior para que el gráfico tenga más espacio
+        position: 'top',
         labels: {
           font: {
-            size: 16, // Aumenta el tamaño de la fuente de la leyenda
+            size: 16,
             weight: 'bold',
           },
-          usePointStyle: true, // Usar el estilo de los puntos para las etiquetas de la leyenda
+          usePointStyle: true,
         },
       },
       title: {
         display: true,
         text: '7-Day Price History',
         font: {
-          size: 24, // Aumenta el tamaño del título
+          size: 24,
           weight: 'bold',
         },
-        color: '#2B2B2B', // Asegura que el título sea legible
+        color: '#2B2B2B',
         padding: {
           top: 10,
-          bottom: 30 // Más espacio entre el título y el gráfico
+          bottom: 30
         },
       },
     },
@@ -131,7 +189,7 @@ function Home() {
           },
         },
         ticks: {
-          color: '#666', // Color más oscuro para los ticks
+          color: '#666',
           font: {
             size: 12,
           },
@@ -156,17 +214,17 @@ function Home() {
     },
     elements: {
       line: {
-        tension: 0.4, // Ajusta la suavidad de la línea para un aspecto más fluido
-        borderWidth: 3, // Hace la línea del gráfico más gruesa
-        fill: false, // Sin sombreado debajo de la línea
+        tension: 0.4,
+        borderWidth: 3,
+        fill: false,
       },
       point: {
-        radius: 0, // Oculta los puntos para una apariencia más limpia, o ajusta si prefieres verlos
-        hitRadius: 5, // Aumenta el área sensible para la interacción
+        radius: 0,
+        hitRadius: 5,
       },
     },
     animation: {
-      duration: 1000, // Animación más suave al cargar o actualizar el gráfico
+      duration: 1000,
     },
     layout: {
       padding: {
@@ -186,14 +244,19 @@ function Home() {
         <select onChange={(e) => setCrypto(e.target.value)} value={crypto} className={styles.select}>
           <option value="BTC">Bitcoin (BTC)</option>
           <option value="ETH">Ethereum (ETH)</option>
-          <option value="BNB">Binance Coin (BNB)</option> {/* Aquí hemos añadido BNB */}
+          <option value="BNB">Binance Coin (BNB)</option>
         </select>
 
         {error ? (
           <p className={styles.price}>Error: {error}</p>
+        ) : chartData.length === 0 ? (
+          <p className={styles.price}>Loading data...</p>
         ) : (
           <>
             <p className={styles.price}>Current Price: ${price ? price.toLocaleString() : 'Loading...'}</p>
+            <p className={`${styles.prediction} ${prediction.includes('Over') ? styles.overbought : (prediction.includes('Under') ? styles.oversold : styles.neutral)}`}>
+              Prediction: {prediction}
+            </p>
             {chartData.length > 0 && 
               <div className={styles.chart}>
                 <Line data={data} options={options} />
