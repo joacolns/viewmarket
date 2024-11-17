@@ -16,10 +16,19 @@
 }
 
 @media (max-width: 768px) {
-  body, html {
-    overflow: hidden;
+  body::before {
+    width: 200px; /* Ajustar el tamaño del logo en móviles */
+    height: 200px;
+  }
+  
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 20px; /* Reduce el margen en móviles */
   }
 }
+
 
 @keyframes fadeIn {
   0% {
@@ -44,17 +53,16 @@ body {
 /* Estilo para el logo */
 body::before {
   content: '';
-  position: fixed; /* Fijamos el logo en la parte superior */
-  top: 0; /* Colocamos el logo en la parte superior */
+  position: absolute; /* Cambiado de fixed a absolute */
+  top: 0; /* Sigue comenzando desde la parte superior */
   left: 50%;
-  transform: translateX(-50%); /* Centrado horizontalmente */
-  background-image: url('../assets/logo.png'); /* Ruta a tu logo */
+  transform: translateX(-50%);
+  background-image: url('../assets/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
-  width: 350px; /* Ajustamos el tamaño del logo */
-  height: 350px; /* Ajustamos el tamaño del logo */
+  width: 350px;
+  height: 350px;
 }
-
 /* Contenedor principal */
 .container {
   width: 100%;
