@@ -137,8 +137,8 @@ function Home() {
           type="text"
           value={crypto}
           onChange={e => setCrypto(e.target.value.toUpperCase())}
-          className="p-2 border rounded w-full md:w-1/3 mb-2 md:mb-0"
-          placeholder="Enter cryptocurrency symbol"
+          className="p-2 border rounded w-full md:w-1/12 mb-2 md:mb-0"
+          placeholder="Symbol"
         />
         <div className="price text-lg font-bold mb-2 md:mb-0">
           {price && <p>Price: ${price}</p>}
@@ -159,7 +159,7 @@ function Home() {
             const value = e.target.value;
             setTimePeriod(value === "" ? 0 : Math.max(0, Number(value)));  // Si está vacío, asigna 0
           }}
-          className="p-2 border rounded w-full md:w-1/4"
+          className="p-2 border rounded w-full md:w-1/12"
           min="0"
         />
       </div>

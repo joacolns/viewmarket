@@ -36,7 +36,6 @@ body {
   height: 90%;
   color: var(--foreground);
   margin: 0;
-  padding: 0;
   position: relative;
   padding-top: 250px;
   animation: fadeIn 1s ease-in-out; /* Se aplica el fade-in a la carga */
