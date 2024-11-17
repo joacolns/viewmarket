@@ -1,34 +1,56 @@
-.main {
-    @apply flex flex-col items-center min-h-screen p-4;
+/* page.module.css */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
   }
-  .title {
-    @apply text-4xl font-bold text-center mb-8;
+  
+  .inputField {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+    font-size: 1rem;
   }
-  .grid {
-    @apply flex flex-col items-center;
+  
+  .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
   }
-  .select {
-    @apply mb-4 p-2 rounded;
+  
+  .rsiValue {
+    font-size: 1rem;
+    margin-top: 10px;
   }
-  .price, .prediction {
-    @apply text-lg mb-4;
-  }
+  
   .chart {
-    @apply w-full max-w-full h-96;
+    margin-top: 20px;
   }
   
-  .prediction {
-    @apply text-lg font-bold;
+  .text-red-500 {
+    color: #f56565;
   }
   
-  .overbought {
-    @apply text-red-500;
+  .mb-4 {
+    margin-bottom: 1rem;
   }
   
-  .oversold {
-    @apply text-green-500;
+  .flex {
+    display: flex;
   }
   
-  .neutral {
-    @apply text-gray-500;
+  .justify-between {
+    justify-content: space-between;
   }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .p-4 {
+    padding: 16px;
+  }
+  

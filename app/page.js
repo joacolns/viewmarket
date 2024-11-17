@@ -9,10 +9,10 @@ import styles from './page.module.css';
 
 Chart.register(...registerables);
 
+// Función para calcular RSI
 function calculateRSI(prices, period = 14) {
   const gains = [];
   const losses = [];
-
   for (let i = 1; i < prices.length; i++) {
     const diff = prices[i] - prices[i - 1];
     if (diff >= 0) {
@@ -31,7 +31,6 @@ function calculateRSI(prices, period = 14) {
   for (let i = period; i < prices.length; i++) {
     const currentGain = gains[i - 1];
     const currentLoss = losses[i - 1];
-
     avgGain = ((avgGain * (period - 1)) + currentGain) / period;
     avgLoss = ((avgLoss * (period - 1)) + currentLoss) / period;
 
@@ -47,224 +46,195 @@ function calculateRSI(prices, period = 14) {
   return rsiValues;
 }
 
+// Función para calcular MACD y la línea de señal
+function calculateMACD(prices, shortTerm = 12, longTerm = 26, signalTerm = 9) {
+  const shortEMA = calculateEMA(prices, shortTerm);
+  const longEMA = calculateEMA(prices, longTerm);
+  const macd = shortEMA.map((value, index) => value - longEMA[index]);
+  const signalLine = calculateEMA(macd, signalTerm);
+  return { macd, signalLine };
+}
+
+// Función para calcular EMA
+function calculateEMA(prices, period) {
+  const multiplier = 2 / (period + 1);
+  let ema = [prices[0]];
+  for (let i = 1; i < prices.length; i++) {
+    const newEMA = (prices[i] - ema[i - 1]) * multiplier + ema[i - 1];
+    ema.push(newEMA);
+  }
+  return ema;
+}
+
+// Función para calcular Bandas de Bollinger
+function calculateBollingerBands(prices, period = 20, multiplier = 2) {
+  const sma = calculateSMA(prices, period);
+  const deviations = prices.map((price, index) => {
+    const periodPrices = prices.slice(index - period + 1, index + 1);
+    const mean = periodPrices.reduce((a, b) => a + b, 0) / periodPrices.length;
+    const variance = periodPrices.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / periodPrices.length;
+    return Math.sqrt(variance);
+  });
+
+  const upperBand = sma.map((smaValue, index) => smaValue + deviations[index] * multiplier);
+  const lowerBand = sma.map((smaValue, index) => smaValue - deviations[index] * multiplier);
+
+  return { upperBand, lowerBand };
+}
+
+function calculateSMA(prices, period) {
+  const sma = [];
+  for (let i = period - 1; i < prices.length; i++) {
+    const sum = prices.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+    sma.push(sum / period);
+  }
+  return sma;
+}
+
 function Home() {
   const [crypto, setCrypto] = useState('BTC');
   const [price, setPrice] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
   const [prediction, setPrediction] = useState('');
+  const [rsiValue, setRsiValue] = useState(null);
+  const [macdValue, setMacdValue] = useState(null);
+  const [bollingerBands, setBollingerBands] = useState(null);
+  const [timePeriod, setTimePeriod] = useState(30); // Default to 30 days
 
   useEffect(() => {
     const fetchData = async () => {
       setError(null);
       try {
-        // Fetch current price from CryptoCompare
         const priceResponse = await axios.get(
           `https://min-api.cryptocompare.com/data/price?fsym=${crypto}&tsyms=USD`
         );
-        
         if (priceResponse.data && priceResponse.data.USD) {
           setPrice(priceResponse.data.USD);
         } else {
-          // Intento de fallback con CoinGecko en caso de que CryptoCompare no tenga datos
-          try {
-            const coingeckoResponse = await axios.get(
-              `https://api.coingecko.com/api/v3/simple/price?ids=${crypto.toLowerCase()}&vs_currencies=usd`
-            );
-            if (coingeckoResponse.data && coingeckoResponse.data[crypto.toLowerCase()]) {
-              setPrice(coingeckoResponse.data[crypto.toLowerCase()].usd);
-            } else {
-              throw new Error(`Price data not available for ${crypto} from any source.`);
-            }
-          } catch (coingeckoErr) {
-            setError(`Price data not available for ${crypto}.`);
-            return; // No intentamos obtener datos históricos si no hay precio
-          }
+          throw new Error(`Price data not available for ${crypto}.`);
         }
 
-        // Fetch historical data from CryptoCompare. Increased limit to 20 for RSI calculation
         const historyResponse = await axios.get(
-          `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=20`
+          `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=200`
         );
-
-        if (historyResponse.data && 
-            historyResponse.data.Data && 
-            historyResponse.data.Data.Data && 
-            Array.isArray(historyResponse.data.Data.Data)) {
-          const prices = historyResponse.data.Data.Data.map(data => ({
-            x: new Date(data.time * 1000), 
-            y: data.close
-          }));
+        if (historyResponse.data &&
+          historyResponse.data.Data &&
+          Array.isArray(historyResponse.data.Data.Data) &&
+          historyResponse.data.Data.Data.length > 0) {
+          const prices = historyResponse.data.Data.Data.map(data => data.close);
           setChartData(prices);
 
-          if (prices.length >= 15) {  // Asegúrate de tener al menos 15 datos para RSI
-            const rsi = calculateRSI(prices.map(item => item.y));
-            if (rsi.length > 0) {
-              const lastRSI = rsi[rsi.length - 1];
-              let prediction = 'Neutral';
+          if (prices.length >= 14) {
+            const rsi = calculateRSI(prices);
+            const { macd, signalLine } = calculateMACD(prices);
+            const { upperBand, lowerBand } = calculateBollingerBands(prices);
 
-              if (lastRSI > 70) {
-                prediction = 'Overbought - Possible Price Drop';
-              } else if (lastRSI < 30) {
-                prediction = 'Oversold - Possible Price Rise';
-              }
+            setRsiValue(rsi[rsi.length - 1]);
+            setMacdValue(macd[macd.length - 1]);
+            setBollingerBands({ upperBand, lowerBand });
 
-              setPrediction(prediction);
-            } else {
-              setPrediction('RSI calculation resulted in no data');
-            }
-          } else {
-            setPrediction('Not enough historical data for RSI calculation');
+            // Predicción combinada
+            makePrediction(rsi, macd, signalLine, upperBand, lowerBand);
+            makeTrendPrediction(prices);
           }
         } else {
-          setError(`Historical data not available or in unexpected format for ${crypto}.`);
+          throw new Error(`Price history not available for ${crypto}.`);
         }
-      } catch (err) {
-        console.error('Error fetching or processing data:', err.message || err);
-        if (err.message.includes('400') || err.message.includes('Invalid')) {
-          setError(`Cryptocurrency ${crypto} is not supported or invalid.`);
-        } else {
-          setError('Failed to fetch data, please try again later.');
-        }
+      } catch (error) {
+        setError(error.message);
       }
     };
 
     fetchData();
-  }, [crypto]);
+  }, [crypto, timePeriod]);
 
-  const data = {
-    datasets: [{
-      label: `${crypto} Price (USD)`,
-      data: chartData,
-      borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1,
-      fill: false,
-    }],
+  // Función para hacer la predicción de tendencia en base al periodo seleccionado
+  const makeTrendPrediction = (prices) => {
+    const startPrice = prices[prices.length - timePeriod - 1];
+    const endPrice = prices[prices.length - 1];
+    const priceChange = ((endPrice - startPrice) / startPrice) * 100;
+
+    if (priceChange > 0) {
+      setPrediction(`Up ${priceChange.toFixed(2)}%`);
+    } else if (priceChange < 0) {
+      setPrediction(`Down ${Math.abs(priceChange).toFixed(2)}%`);
+    } else {
+      setPrediction('No significant change');
+    }
   };
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          font: {
-            size: 16,
-            weight: 'bold',
-          },
-          usePointStyle: true,
-        },
-      },
-      title: {
-        display: true,
-        text: '7-Day Price History',
-        font: {
-          size: 24,
-          weight: 'bold',
-        },
-        color: '#2B2B2B',
-        padding: {
-          top: 10,
-          bottom: 30
-        },
-      },
-    },
-    scales: {
-      x: {
-        type: 'time',
-        time: {
-          unit: 'day',
-          tooltipFormat: 'dd/MM/yyyy',
-          displayFormats: {
-            day: 'MMM dd',
-          },
-        },
-        title: {
-          display: true,
-          text: 'Date',
-          color: '#2B2B2B',
-          font: {
-            size: 14,
-          },
-        },
-        ticks: {
-          color: '#666',
-          font: {
-            size: 12,
-          },
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Price (USD)',
-          color: '#2B2B2B',
-          font: {
-            size: 14,
-          },
-        },
-        ticks: {
-          color: '#666',
-          font: {
-            size: 12,
-          },
-        },
-      },
-    },
-    elements: {
-      line: {
-        tension: 0.4,
-        borderWidth: 3,
-        fill: false,
-      },
-      point: {
-        radius: 0,
-        hitRadius: 5,
-      },
-    },
-    animation: {
-      duration: 1000,
-    },
-    layout: {
-      padding: {
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: 20,
-      },
-    },
+  // Función para hacer la predicción
+  const makePrediction = (rsi, macd, signalLine, upperBand, lowerBand) => {
+    if (rsi < 30 && macd > signalLine) {
+      setPrediction('Buy');
+    } else if (rsi > 70 && macd < signalLine) {
+      setPrediction('Sell');
+    } else if (price > upperBand[upperBand.length - 1]) {
+      setPrediction('Overbought - Sell');
+    } else if (price < lowerBand[lowerBand.length - 1]) {
+      setPrediction('Oversold - Buy');
+    } else {
+      setPrediction('Hold');
+    }
   };
 
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>ViewMarket</h1>
-
-      <div className={styles.grid}>
-        <select onChange={(e) => setCrypto(e.target.value)} value={crypto} className={styles.select}>
-          <option value="BTC">Bitcoin (BTC)</option>
-          <option value="ETH">Ethereum (ETH)</option>
-          <option value="BNB">Binance Coin (BNB)</option>
-        </select>
-
-        {error ? (
-          <p className={styles.price}>Error: {error}</p>
-        ) : chartData.length === 0 ? (
-          <p className={styles.price}>Loading data...</p>
-        ) : (
-          <>
-            <p className={styles.price}>Current Price: ${price ? price.toLocaleString() : 'Loading...'}</p>
-            <p className={`${styles.prediction} ${prediction.includes('Over') ? styles.overbought : (prediction.includes('Under') ? styles.oversold : styles.neutral)}`}>
-              Prediction: {prediction}
-            </p>
-            {chartData.length > 0 && 
-              <div className={styles.chart}>
-                <Line data={data} options={options} />
-              </div>}
-          </>
-        )}
+    <div className="container mx-auto p-4">
+      <div className="flex justify-between items-center mb-4">
+        <input
+          type="text"
+          value={crypto}
+          onChange={e => setCrypto(e.target.value.toUpperCase())}
+          className="p-2 border rounded w-1/3"
+          placeholder="Enter cryptocurrency symbol"
+        />
+        <div className="price text-lg font-bold">
+          {price && <p>Price: ${price}</p>}
+          {prediction && <p>Prediction: {prediction}</p>}
+        </div>
       </div>
-    </main>
+
+      {/* Selector de periodo de tiempo */}
+      <div className="time-period mb-4">
+        <label htmlFor="timePeriod" className="mr-2">Select Time Period (days):</label>
+        <input
+          type="number"
+          id="timePeriod"
+          value={timePeriod}
+          onChange={e => setTimePeriod(Number(e.target.value))}
+          min="1"
+          max="200"
+          className="p-2 border rounded w-20"
+        />
+      </div>
+
+      {/* Mostrar gráfico */}
+      <div className="chart-container">
+        <Line
+          data={{
+            labels: chartData.map((_, index) => new Date().setDate(new Date().getDate() - chartData.length + index)),
+            datasets: [{
+              label: `${crypto} Price`,
+              data: chartData,
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1,
+            }],
+          }}
+          options={{
+            responsive: true,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: (context) => `Price: $${context.raw}`,
+                },
+              },
+            },
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
