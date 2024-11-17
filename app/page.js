@@ -127,11 +127,20 @@ function Home() {
     }
   };
 
-  const getChartHeight = () => {
-    const containerWidth = chartContainerRef.current ? chartContainerRef.current.offsetWidth : window.innerWidth;
-    const aspectRatio = 9 / 16; // Aspect ratio 16:9
-    return containerWidth * aspectRatio;  // Ajusta la altura en función del ancho
-  };
+  const [chartHeight, setChartHeight] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const getChartHeight = () => {
+        const containerWidth = chartContainerRef.current ? chartContainerRef.current.offsetWidth : window.innerWidth;
+        const aspectRatio = 9 / 16;
+        return containerWidth * aspectRatio;
+      };
+      setChartHeight(getChartHeight());
+      window.addEventListener('resize', setChartHeight);
+      return () => window.removeEventListener('resize', setChartHeight);
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
@@ -175,7 +184,7 @@ function Home() {
         <p>Lower Bollinger Band: {bollingerBands?.lowerBand ? bollingerBands.lowerBand[bollingerBands.lowerBand.length - 1].toFixed(2) : 'Loading...'}</p>
       </div>
   
-      <div ref={chartContainerRef} className="chart w-full mb-4" style={{ height: getChartHeight() }}>
+      <div ref={chartContainerRef} className="chart w-full mb-4" style={{ height: chartHeight }}>
         {error && <p className="text-red-500">{error}</p>}
         {chartData.length > 0 && (
           <Line
