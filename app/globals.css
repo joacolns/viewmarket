@@ -1,3 +1,4 @@
+/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,5 +16,85 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 250px; /* Ajustamos el padding-top para reducir el espacio */
+}
+
+/* Estilo para el logo */
+body::before {
+  content: '';
+  position: fixed; /* Fijamos el logo en la parte superior */
+  top: 0; /* Colocamos el logo en la parte superior */
+  left: 50%;
+  transform: translateX(-50%); /* Centrado horizontalmente */
+  background-image: url('../assets/logo.png'); /* Ruta a tu logo */
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 400px; /* Ajustamos el tamaño del logo */
+  height: 400px; /* Ajustamos el tamaño del logo */
+}
+
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: -150px; /* Ajusta el espacio según el tamaño del logo */
+  padding: 20px;
+}
+
+/* Estilos para la caja de texto */
+.inputField {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px; /* Ajustar tamaño de la caja de texto */
+  font-size: 1rem;
+  margin-top: 20px; /* Separar de otros elementos */
+}
+
+/* Estilos adicionales */
+.price {
+  font-size: 1.2rem;
+  font-weight: regular;
+  color: #333;
+}
+
+.rsiValue {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.chart {
+  margin-top: 20px;
+}
+
+.text-red-500 {
+  color: #f56565;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.p-4 {
+  padding: 16px;
 }
