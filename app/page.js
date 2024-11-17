@@ -7,90 +7,10 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import styles from './page.module.css';
 
+// Importa las funciones desde indicator.js
+import { calculateRSI, calculateMACD, calculateBollingerBands } from './indicators';
+
 Chart.register(...registerables);
-
-// = Función para calcular RSI =
-function calculateRSI(prices, period = 14) {
-  const gains = [];
-  const losses = [];
-  for (let i = 1; i < prices.length; i++) {
-    const diff = prices[i] - prices[i - 1];
-    if (diff >= 0) {
-      gains.push(diff);
-      losses.push(0);
-    } else {
-      gains.push(0);
-      losses.push(Math.abs(diff));
-    }
-  }
-
-  let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
-  let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
-
-  const rsiValues = [];
-  for (let i = period; i < prices.length; i++) {
-    const currentGain = gains[i - 1];
-    const currentLoss = losses[i - 1];
-    avgGain = ((avgGain * (period - 1)) + currentGain) / period;
-    avgLoss = ((avgLoss * (period - 1)) + currentLoss) / period;
-
-    if (avgLoss === 0) {
-      rsiValues.push(100);
-    } else {
-      const rs = avgGain / avgLoss;
-      const rsi = 100 - (100 / (1 + rs));
-      rsiValues.push(rsi);
-    }
-  }
-
-  return rsiValues;
-}
-
-// === Función para calcular MACD y la línea de señal ===
-function calculateMACD(prices, shortTerm = 12, longTerm = 26, signalTerm = 9) {
-  const shortEMA = calculateEMA(prices, shortTerm);
-  const longEMA = calculateEMA(prices, longTerm);
-  const macd = shortEMA.map((value, index) => value - longEMA[index]);
-  const signalLine = calculateEMA(macd, signalTerm);
-  return { macd, signalLine };
-}
-
-// === Función para calcular EMA ===
-function calculateEMA(prices, period) {
-  const multiplier = 2 / (period + 1);
-  let ema = [prices[0]];
-  for (let i = 1; i < prices.length; i++) {
-    const newEMA = (prices[i] - ema[i - 1]) * multiplier + ema[i - 1];
-    ema.push(newEMA);
-  }
-  return ema;
-}
-
-// === Función para calcular Bandas de Bollinger ===
-function calculateBollingerBands(prices, period = 20, multiplier = 2) {
-  const sma = calculateSMA(prices, period);
-  const deviations = prices.map((price, index) => {
-    const periodPrices = prices.slice(index - period + 1, index + 1);
-    const mean = periodPrices.reduce((a, b) => a + b, 0) / periodPrices.length;
-    const variance = periodPrices.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / periodPrices.length;
-    return Math.sqrt(variance);
-  });
-
-  const upperBand = sma.map((smaValue, index) => smaValue + deviations[index] * multiplier);
-  const lowerBand = sma.map((smaValue, index) => smaValue - deviations[index] * multiplier);
-
-  return { upperBand, lowerBand };
-}
-
-// === Función para calcular SMA ===
-function calculateSMA(prices, period) {
-  const sma = [];
-  for (let i = period - 1; i < prices.length; i++) {
-    const sum = prices.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
-    sma.push(sum / period);
-  }
-  return sma;
-}
 
 function Home() {
   const [crypto, setCrypto] = useState('BTC');
@@ -102,6 +22,16 @@ function Home() {
   const [macdValue, setMacdValue] = useState(null);
   const [bollingerBands, setBollingerBands] = useState(null);
   const [timePeriod, setTimePeriod] = useState(30); // Default to 30 days
+
+  // Función para calcular el cambio porcentual
+  const calculatePriceChange = (prices) => {
+    return prices.map((price, index) => {
+      if (index === 0) return 0; // No hay cambio en el primer día
+      const prevPrice = prices[index - 1];
+      const priceChange = ((price - prevPrice) / prevPrice) * 100;
+      return priceChange;
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,6 +55,9 @@ function Home() {
           historyResponse.data.Data.Data.length > 0) {
           const prices = historyResponse.data.Data.Data.map(data => data.close);
           setChartData(prices);
+
+          // Calcula los cambios porcentuales
+          const priceChanges = calculatePriceChange(prices);
 
           if (prices.length >= 14) {
             const rsi = calculateRSI(prices);
@@ -193,48 +126,73 @@ function Home() {
         </div>
       </div>
       <div className="time-period mb-4">
-        <label htmlFor="timePeriod" className="mr-2">Select Time Period (days):</label>
+        <label htmlFor="timePeriod" className="mr-2">Time Period (D Max. 200):</label>
         <input
           type="number"
           id="timePeriod"
-          value={timePeriod}
-          onChange={e => setTimePeriod(Number(e.target.value))}
-          min="1"
-          max="200"
-          className="p-2 border rounded w-20"
+          value={timePeriod || 0}  // Si timePeriod es 0 o NaN, muestra 0
+          onChange={e => {
+            const value = e.target.value;
+            setTimePeriod(value === "" ? 0 : Math.max(1, Number(value)));  // Si está vacío, asigna 0
+          }}
+          className="p-2 border rounded"
+          min="0"
         />
       </div>
-      <div className="chart-container">
-<Line
-  data={{
-    labels: chartData.map((_, index) =>
-      new Date().setDate(new Date().getDate() - chartData.length + index)
-    ),
-    datasets: [
-      {
-        label: `${crypto} Price`,
-        data: chartData,
-        fill: false,
-        segment: {
-          borderColor: (ctx) => {
-            const { p0, p1 } = ctx;
-            return p1.raw > p0.raw ? 'green' : 'red'; // Verde si sube, rojo si baja
-          },
-        },
-        borderWidth: 2,
-      },
-    ],
-  }}
-  options={{
-    responsive: true,
-    scales: {
-      x: { type: 'time', time: { unit: 'day' } },
-      y: { beginAtZero: false },
-    },
-  }}
-/>
+  
+      {/* Mostrar RSI, MACD, y Bandas de Bollinger */}
+      <div className="indicators mb-4">
+        <p>RSI Value: {rsiValue ? rsiValue.toFixed(2) : 'Loading...'}</p>
+        <p>MACD Value: {macdValue ? macdValue.toFixed(2) : 'Loading...'}</p>
+        <p>Upper Bollinger Band: {bollingerBands?.upperBand ? bollingerBands.upperBand[bollingerBands.upperBand.length - 1].toFixed(2) : 'Loading...'}</p>
+        <p>Lower Bollinger Band: {bollingerBands?.lowerBand ? bollingerBands.lowerBand[bollingerBands.lowerBand.length - 1].toFixed(2) : 'Loading...'}</p>
       </div>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+  
+      <div className="chart">
+        {error && <p className="text-red-500">{error}</p>}
+        {chartData.length > 0 && (
+          <Line
+            data={{
+              labels: chartData.map((_, index) => index), // Etiquetas de los días
+              datasets: [
+                {
+                  label: `${crypto} Price`,
+                  data: chartData,
+                  fill: false,
+                  borderColor: 'rgb(75, 192, 192)',
+                  segment: {
+                    borderColor: (ctx) => {
+                      const { p0, p1 } = ctx;
+                      return p1.raw > p0.raw ? 'green' : 'red'; // Verde si sube, rojo si baja
+                    }
+                  },
+                  tension: 0.1
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { display: true },
+                tooltip: {
+                  callbacks: {
+                    label: function (tooltipItem) {
+                      const price = tooltipItem.raw;
+                      const priceChange = calculatePriceChange(chartData);
+                      const change = priceChange[tooltipItem.dataIndex];
+                      return `${crypto} Price: $${price} (${change.toFixed(2)}%)`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: { beginAtZero: true },
+                y: { beginAtZero: false }
+              }
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
