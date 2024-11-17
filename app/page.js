@@ -133,35 +133,35 @@ function Home() {
   return (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <input
-          type="text"
-          value={crypto}
-          onChange={e => setCrypto(e.target.value.toUpperCase())}
-          className="p-2 border rounded w-full md:w-1/12 mb-2 md:mb-0"
-          placeholder="Symbol"
-        />
-        <div className="price text-lg font-bold mb-2 md:mb-0">
-          {price && <p>Price: ${price}</p>}
-          {prediction && (
-            <p style={{ color: predictionStyle.color }}>
-              {prediction} <span>{predictionStyle.icon}</span>
-            </p>
-          )}
-        </div>
+      <input
+      type="text"
+      value={crypto}
+      onChange={e => setCrypto(e.target.value.toUpperCase())}
+      className="p-3 border rounded-md w-full md:w-1/12 mb-2 md:mb-0 bg-white text-gray-800 placeholder-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out"
+      placeholder="Symbol"
+    />
+    <div className="price text-lg font-bold mb-2 md:mb-0">
+      {price && <p>Price: ${price}</p>}
+      {prediction && (
+        <p style={{ color: predictionStyle.color }}>
+          {prediction} <span>{predictionStyle.icon}</span>
+        </p>
+      )}
+    </div>
       </div>
       <div className="time-period mb-4">
-        <label htmlFor="timePeriod" className="mr-2">Time Period (Max. 200):</label>
-        <input
-          type="number"
-          id="timePeriod"
-          value={timePeriod || 0}  // Si timePeriod es 0 o NaN, muestra 0
-          onChange={e => {
-            const value = e.target.value;
-            setTimePeriod(value === "" ? 0 : Math.max(0, Number(value)));  // Si está vacío, asigna 0
-          }}
-          className="p-2 border rounded w-full md:w-1/12"
-          min="0"
-        />
+      <label htmlFor="timePeriod" className="mr-2 text-lg font-semibold">Time Period (Max. 200):</label>
+  <input
+    type="number"
+    id="timePeriod"
+    value={timePeriod || 0}  // Si timePeriod es 0 o NaN, muestra 0
+    onChange={e => {
+      const value = e.target.value;
+      setTimePeriod(value === "" ? 0 : Math.max(0, Math.min(200, Number(value))));  // Limitar a 200
+    }}
+    className="p-3 border rounded-md w-full md:w-1/12 mb-2 md:mb-0 bg-white text-gray-800 placeholder-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out"
+    min="0"
+  />
       </div>
   
       {/* Mostrar RSI, MACD, y Bandas de Bollinger */}
@@ -216,12 +216,17 @@ function Home() {
   
       {/* Agregar los íconos */}
       <div className="icons flex justify-center space-x-8">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/njoaco/viewmarket-crypto" target="_blank" rel="noopener noreferrer">
           <FaGithub size={30} color="black" />
         </a>
         <a href="https://www.coinmarketcap.com" target="_blank" rel="noopener noreferrer">
           <FaChartBar size={30} color="black" />
         </a>
+        
+      {/* Agregar el texto "v1.0" en la esquina inferior izquierda */}
+      <div className={styles.version}>
+        v1.0
+      </div>
       </div>
     </div>
   );
