@@ -149,7 +149,7 @@ function Home() {
       type="text"
       value={crypto}
       onChange={e => setCrypto(e.target.value.toUpperCase())}
-      className="p-3 border rounded-md w-full md:w-1/12 mb-2 md:mb-0 bg-white text-gray-800 placeholder-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out"
+      className="relative z-10 p-3 border rounded-md w-full md:w-1/12 bg-white"
       placeholder="Symbol"
     />
     <div className="price text-lg font-bold mb-2 md:mb-0">
@@ -171,7 +171,7 @@ function Home() {
       const value = e.target.value;
       setTimePeriod(value === "" ? 0 : Math.max(0, Math.min(200, Number(value))));  // Limitar a 200
     }}
-    className="p-3 border rounded-md w-full md:w-1/12 mb-2 md:mb-0 bg-white text-gray-800 placeholder-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out"
+    className="relative z-10 p-3 border rounded-md w-full md:w-1/12 bg-white"
     min="0"
   />
       </div>
@@ -184,7 +184,7 @@ function Home() {
         <p>Lower Bollinger Band: {bollingerBands?.lowerBand ? bollingerBands.lowerBand[bollingerBands.lowerBand.length - 1].toFixed(2) : 'Loading...'}</p>
       </div>
   
-      <div ref={chartContainerRef} className="chart w-full mb-4" style={{ height: chartHeight }}>
+      <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
         {error && <p className="text-red-500">{error}</p>}
         {chartData.length > 0 && (
           <Line
@@ -237,7 +237,7 @@ function Home() {
         
       {/* Agregar el texto "v1.0" en la esquina inferior izquierda */}
       <div className={styles.version}>
-        v1.0
+        v1.0.1
       </div>
       </div>
     </div>
