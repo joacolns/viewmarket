@@ -40,52 +40,55 @@ function Home() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setError(null);
-      try {
-        const priceResponse = await axios.get(
-          `https://min-api.cryptocompare.com/data/price?fsym=${crypto}&tsyms=USD`
-        );
-        if (priceResponse.data && priceResponse.data.USD) {
-          setPrice(priceResponse.data.USD);
-        } else {
-          throw new Error(`Price data not available for ${crypto}.`);
-        }
-
-        const historyResponse = await axios.get(
-          `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=200`
-        );
-        if (historyResponse.data &&
-          historyResponse.data.Data &&
-          Array.isArray(historyResponse.data.Data.Data) &&
-          historyResponse.data.Data.Data.length > 0) {
-          const prices = historyResponse.data.Data.Data.map(data => data.close);
-          setChartData(prices);
-
-          // Calcula los cambios porcentuales
-          const priceChanges = calculatePriceChange(prices);
-
-          if (prices.length >= 14) {
-            const rsi = calculateRSI(prices);
-            const { macd, signalLine } = calculateMACD(prices);
-            const { upperBand, lowerBand } = calculateBollingerBands(prices);
-
-            setRsiValue(rsi[rsi.length - 1]);
-            setMacdValue(macd[macd.length - 1]);
-            setBollingerBands({ upperBand, lowerBand });
-
-            makePrediction(rsi, macd, signalLine, upperBand, lowerBand);
-            makeTrendPrediction(prices);
+    if (typeof window !== 'undefined') {
+      const fetchData = async () => {
+        setError(null);
+        try {
+          const priceResponse = await axios.get(
+            `https://min-api.cryptocompare.com/data/price?fsym=${crypto}&tsyms=USD`
+          );
+          if (priceResponse.data && priceResponse.data.USD) {
+            setPrice(priceResponse.data.USD);
+          } else {
+            throw new Error(`Price data not available for ${crypto}.`);
           }
-        } else {
-          throw new Error(`Price history not available for ${crypto}.`);
+  
+          const historyResponse = await axios.get(
+            `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=200`
+          );
+          if (historyResponse.data &&
+            historyResponse.data.Data &&
+            Array.isArray(historyResponse.data.Data.Data) &&
+            historyResponse.data.Data.Data.length > 0) {
+            const prices = historyResponse.data.Data.Data.map(data => data.close);
+            setChartData(prices);
+  
+            // Calcula los cambios porcentuales
+            const priceChanges = calculatePriceChange(prices);
+  
+            if (prices.length >= 14) {
+              const rsi = calculateRSI(prices);
+              const { macd, signalLine } = calculateMACD(prices);
+              const { upperBand, lowerBand } = calculateBollingerBands(prices);
+  
+              setRsiValue(rsi[rsi.length - 1]);
+              setMacdValue(macd[macd.length - 1]);
+              setBollingerBands({ upperBand, lowerBand });
+  
+              makePrediction(rsi, macd, signalLine, upperBand, lowerBand);
+              makeTrendPrediction(prices);
+            }
+          } else {
+            throw new Error(`Price history not available for ${crypto}.`);
+          }
+        } catch (error) {
+          setError(error.message);
         }
-      } catch (error) {
-        setError(error.message);
-      }
-    };
+      };
+  
+      fetchData();
+    }
 
-    fetchData();
   }, [crypto, timePeriod]);
 
   const makeTrendPrediction = (prices) => {
