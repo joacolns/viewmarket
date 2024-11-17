@@ -9,7 +9,7 @@ import styles from './page.module.css';
 
 Chart.register(...registerables);
 
-// Función para calcular RSI
+// === Función para calcular RSI ===
 function calculateRSI(prices, period = 14) {
   const gains = [];
   const losses = [];
@@ -46,7 +46,7 @@ function calculateRSI(prices, period = 14) {
   return rsiValues;
 }
 
-// Función para calcular MACD y la línea de señal
+// === Función para calcular MACD y la línea de señal ===
 function calculateMACD(prices, shortTerm = 12, longTerm = 26, signalTerm = 9) {
   const shortEMA = calculateEMA(prices, shortTerm);
   const longEMA = calculateEMA(prices, longTerm);
@@ -55,7 +55,7 @@ function calculateMACD(prices, shortTerm = 12, longTerm = 26, signalTerm = 9) {
   return { macd, signalLine };
 }
 
-// Función para calcular EMA
+// === Función para calcular EMA ===
 function calculateEMA(prices, period) {
   const multiplier = 2 / (period + 1);
   let ema = [prices[0]];
@@ -66,7 +66,7 @@ function calculateEMA(prices, period) {
   return ema;
 }
 
-// Función para calcular Bandas de Bollinger
+// === Función para calcular Bandas de Bollinger ===
 function calculateBollingerBands(prices, period = 20, multiplier = 2) {
   const sma = calculateSMA(prices, period);
   const deviations = prices.map((price, index) => {
@@ -82,6 +82,7 @@ function calculateBollingerBands(prices, period = 20, multiplier = 2) {
   return { upperBand, lowerBand };
 }
 
+// === Función para calcular SMA ===
 function calculateSMA(prices, period) {
   const sma = [];
   for (let i = period - 1; i < prices.length; i++) {
@@ -134,7 +135,6 @@ function Home() {
             setMacdValue(macd[macd.length - 1]);
             setBollingerBands({ upperBand, lowerBand });
 
-            // Predicción combinada
             makePrediction(rsi, macd, signalLine, upperBand, lowerBand);
             makeTrendPrediction(prices);
           }
@@ -149,7 +149,6 @@ function Home() {
     fetchData();
   }, [crypto, timePeriod]);
 
-  // Función para hacer la predicción de tendencia en base al periodo seleccionado
   const makeTrendPrediction = (prices) => {
     const startPrice = prices[prices.length - timePeriod - 1];
     const endPrice = prices[prices.length - 1];
@@ -164,7 +163,6 @@ function Home() {
     }
   };
 
-  // Función para hacer la predicción
   const makePrediction = (rsi, macd, signalLine, upperBand, lowerBand) => {
     if (rsi < 30 && macd > signalLine) {
       setPrediction('Buy');
@@ -194,8 +192,6 @@ function Home() {
           {prediction && <p>Prediction: {prediction}</p>}
         </div>
       </div>
-
-      {/* Selector de periodo de tiempo */}
       <div className="time-period mb-4">
         <label htmlFor="timePeriod" className="mr-2">Select Time Period (days):</label>
         <input
@@ -208,31 +204,37 @@ function Home() {
           className="p-2 border rounded w-20"
         />
       </div>
-
-      {/* Mostrar gráfico */}
       <div className="chart-container">
-        <Line
-          data={{
-            labels: chartData.map((_, index) => new Date().setDate(new Date().getDate() - chartData.length + index)),
-            datasets: [{
-              label: `${crypto} Price`,
-              data: chartData,
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-            }],
-          }}
-          options={{
-            responsive: true,
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: (context) => `Price: $${context.raw}`,
-                },
-              },
-            },
-          }}
-        />
+<Line
+  data={{
+    labels: chartData.map((_, index) =>
+      new Date().setDate(new Date().getDate() - chartData.length + index)
+    ),
+    datasets: [
+      {
+        label: `${crypto} Price`,
+        data: chartData,
+        fill: false,
+        segment: {
+          borderColor: (ctx) => {
+            const { p0, p1 } = ctx;
+            return p1.raw > p0.raw ? 'green' : 'red'; // Verde si sube, rojo si baja
+          },
+        },
+        borderWidth: 2,
+      },
+    ],
+  }}
+  options={{
+    responsive: true,
+    scales: {
+      x: { type: 'time', time: { unit: 'day' } },
+      y: { beginAtZero: false },
+    },
+  }}
+/>
       </div>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
 }
