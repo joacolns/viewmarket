@@ -1,11 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import styles from './page.module.css';
+
+// Importa los íconos de react-icons
+import { FaGithub } from 'react-icons/fa';  // GitHub icon
+import { FaChartBar } from 'react-icons/fa'; // CoinMarketCap no tiene ícono oficial, usamos un ícono de criptomoneda
 
 // Importa las funciones desde indicator.js
 import { calculateRSI, calculateMACD, calculateBollingerBands } from './indicators';
@@ -18,10 +22,12 @@ function Home() {
   const [chartData, setChartData] = useState([]);
   const [error, setError] = useState(null);
   const [prediction, setPrediction] = useState('');
+  const [predictionStyle, setPredictionStyle] = useState({});
   const [rsiValue, setRsiValue] = useState(null);
   const [macdValue, setMacdValue] = useState(null);
   const [bollingerBands, setBollingerBands] = useState(null);
   const [timePeriod, setTimePeriod] = useState(30); // Default to 30 days
+  const chartContainerRef = useRef(null);
 
   // Función para calcular el cambio porcentual
   const calculatePriceChange = (prices) => {
@@ -88,54 +94,72 @@ function Home() {
     const priceChange = ((endPrice - startPrice) / startPrice) * 100;
 
     if (priceChange > 0) {
-      setPrediction(`Up ${priceChange.toFixed(2)}%`);
+      setPrediction(`Prediction: Up ${priceChange.toFixed(2)}%`);
+      setPredictionStyle({ color: 'green', icon: '↑' });
     } else if (priceChange < 0) {
-      setPrediction(`Down ${Math.abs(priceChange).toFixed(2)}%`);
+      setPrediction(`Prediction: Down ${Math.abs(priceChange).toFixed(2)}%`);
+      setPredictionStyle({ color: 'red', icon: '↓' });
     } else {
-      setPrediction('No significant change');
+      setPrediction('Prediction: No significant change');
+      setPredictionStyle({});
     }
   };
 
   const makePrediction = (rsi, macd, signalLine, upperBand, lowerBand) => {
     if (rsi < 30 && macd > signalLine) {
       setPrediction('Buy');
+      setPredictionStyle({ color: 'green', icon: '↑' });
     } else if (rsi > 70 && macd < signalLine) {
       setPrediction('Sell');
+      setPredictionStyle({ color: 'red', icon: '↓' });
     } else if (price > upperBand[upperBand.length - 1]) {
       setPrediction('Overbought - Sell');
+      setPredictionStyle({ color: 'red', icon: '↓' });
     } else if (price < lowerBand[lowerBand.length - 1]) {
       setPrediction('Oversold - Buy');
+      setPredictionStyle({ color: 'green', icon: '↑' });
     } else {
       setPrediction('Hold');
+      setPredictionStyle({});
     }
+  };
+
+  const getChartHeight = () => {
+    const containerWidth = chartContainerRef.current ? chartContainerRef.current.offsetWidth : window.innerWidth;
+    const aspectRatio = 9 / 16; // Aspect ratio 16:9
+    return containerWidth * aspectRatio;  // Ajusta la altura en función del ancho
   };
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <input
           type="text"
           value={crypto}
           onChange={e => setCrypto(e.target.value.toUpperCase())}
-          className="p-2 border rounded w-1/3"
+          className="p-2 border rounded w-full md:w-1/3 mb-2 md:mb-0"
           placeholder="Enter cryptocurrency symbol"
         />
-        <div className="price text-lg font-bold">
+        <div className="price text-lg font-bold mb-2 md:mb-0">
           {price && <p>Price: ${price}</p>}
-          {prediction && <p>Prediction: {prediction}</p>}
+          {prediction && (
+            <p style={{ color: predictionStyle.color }}>
+              {prediction} <span>{predictionStyle.icon}</span>
+            </p>
+          )}
         </div>
       </div>
       <div className="time-period mb-4">
-        <label htmlFor="timePeriod" className="mr-2">Time Period (D Max. 200):</label>
+        <label htmlFor="timePeriod" className="mr-2">Time Period (Max. 200):</label>
         <input
           type="number"
           id="timePeriod"
           value={timePeriod || 0}  // Si timePeriod es 0 o NaN, muestra 0
           onChange={e => {
             const value = e.target.value;
-            setTimePeriod(value === "" ? 0 : Math.max(1, Number(value)));  // Si está vacío, asigna 0
+            setTimePeriod(value === "" ? 0 : Math.max(0, Number(value)));  // Si está vacío, asigna 0
           }}
-          className="p-2 border rounded"
+          className="p-2 border rounded w-full md:w-1/4"
           min="0"
         />
       </div>
@@ -148,7 +172,7 @@ function Home() {
         <p>Lower Bollinger Band: {bollingerBands?.lowerBand ? bollingerBands.lowerBand[bollingerBands.lowerBand.length - 1].toFixed(2) : 'Loading...'}</p>
       </div>
   
-      <div className="chart">
+      <div ref={chartContainerRef} className="chart w-full mb-4" style={{ height: getChartHeight() }}>
         {error && <p className="text-red-500">{error}</p>}
         {chartData.length > 0 && (
           <Line
@@ -177,21 +201,27 @@ function Home() {
                 tooltip: {
                   callbacks: {
                     label: function (tooltipItem) {
-                      const price = tooltipItem.raw;
-                      const priceChange = calculatePriceChange(chartData);
-                      const change = priceChange[tooltipItem.dataIndex];
-                      return `${crypto} Price: $${price} (${change.toFixed(2)}%)`;
+                      return `Price: $${tooltipItem.raw.toFixed(2)}`;
                     }
                   }
                 }
               },
               scales: {
-                x: { beginAtZero: true },
-                y: { beginAtZero: false }
+                x: { display: false }
               }
             }}
           />
         )}
+      </div>
+  
+      {/* Agregar los íconos */}
+      <div className="icons flex justify-center space-x-8">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <FaGithub size={30} color="black" />
+        </a>
+        <a href="https://www.coinmarketcap.com" target="_blank" rel="noopener noreferrer">
+          <FaChartBar size={30} color="black" />
+        </a>
       </div>
     </div>
   );

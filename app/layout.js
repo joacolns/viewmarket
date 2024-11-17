@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'ViewMarket - Crypto Prices',
+  title: 'ViewMarket',
   description: 'Check cryptocurrency predictions',
 }
 
