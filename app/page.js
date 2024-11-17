@@ -9,7 +9,7 @@ import styles from './page.module.css';
 
 Chart.register(...registerables);
 
-// == Función para calcular RSI ==
+// = Función para calcular RSI =
 function calculateRSI(prices, period = 14) {
   const gains = [];
   const losses = [];
