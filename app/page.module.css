@@ -1,56 +1,32 @@
 /* page.module.css */
+
+/* Animación de fade-in para la entrada de los elementos */
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .inputField {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 200px;
-    font-size: 1rem;
-  }
-  
-  .price {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .rsiValue {
-    font-size: 1rem;
-    margin-top: 10px;
-  }
-  
-  .chart {
-    margin-top: 20px;
-  }
-  
-  .text-red-500 {
-    color: #f56565;
-  }
-  
-  .mb-4 {
-    margin-bottom: 1rem;
-  }
-  
-  .flex {
-    display: flex;
-  }
-  
-  .justify-between {
-    justify-content: space-between;
-  }
-  
-  .items-center {
-    align-items: center;
-  }
-  
-  .p-4 {
-    padding: 16px;
-  }
-  
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  animation: fadeIn 1.5s ease-in-out; /* Animación para el contenedor */
+}
+
+.inputField, .price, .rsiValue, .chart, .text-red-500 {
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards; /* Fade-in para cada elemento */
+}
+
+/* Incrementa la demora para el tiempo de aparición */
+.inputField {
+  animation-delay: 0.5s;
+}
+.price {
+  animation-delay: 1s;
+}
+.rsiValue {
+  animation-delay: 1.5s;
+}
+.chart {
+  animation-delay: 2s;
+}
+.text-red-500 {
+  animation-delay: 2.5s;
+}
