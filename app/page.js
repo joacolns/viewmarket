@@ -10,6 +10,7 @@ import styles from './page.module.css';
 // Importa los íconos de react-icons
 import { FaGithub } from 'react-icons/fa';  // GitHub icon
 import { FaChartBar } from 'react-icons/fa'; // CoinMarketCap no tiene ícono oficial, usamos un ícono de criptomoneda
+import { FaShoppingBag } from 'react-icons/fa'; // Añade este import
 
 // Importa las funciones desde indicator.js
 import { calculateRSI, calculateMACD, calculateBollingerBands, evaluatePrediction } from './indicators';
@@ -357,11 +358,12 @@ function Home() {
             <FaChartBar size={30} color="black" />
           </a>
           
-        {/* Agregar el texto "v1.0" en la esquina inferior izquierda */}
+        {/* version */}
         <div className={styles.version}>
           v1.0.2
         </div>
         </div>
+        
       </div>
     );
   }
