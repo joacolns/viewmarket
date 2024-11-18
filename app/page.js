@@ -233,7 +233,7 @@ function Home() {
 </div>
         </div>
         <div className="time-period mb-4">
-        <label htmlFor="timePeriod" className="mr-2 text-lg font-semibold">Time Period (Rec. 200):</label>
+        <label htmlFor="timePeriod" className="mr-2 text-lg font-semibold">Time Period (Rec. 90):</label>
     <input
       type="number"
       id="timePeriod"
