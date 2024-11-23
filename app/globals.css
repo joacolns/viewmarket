@@ -86,6 +86,7 @@ body::before {
 /* Estilos adicionales */
 .price {
   font-size: 1rem;
+  padding: 1%;
   font-weight: regular;
   color: #333;
 }

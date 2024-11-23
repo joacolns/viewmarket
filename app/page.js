@@ -127,9 +127,10 @@ function Home() {
     const priceChange = currentPrice - periodPrices[0];
   
     let trendPrediction = 'No clear trend - Hold';
+    let priceChangePrediction = '';
     let predictionStyle = {};
-    let riseLevel = 'moderately';
   
+    // RSI Analysis
     if (rsi[rsi.length - 1] < 30) {
       if (macd[macd.length - 1] > signalLine[signalLine.length - 1] && currentPrice < lowerBand[lowerBand.length - 1]) {
         trendPrediction = `Strong potential for price increase in ${period} days - Consider buying soon.`;
@@ -166,25 +167,24 @@ function Home() {
       predictionStyle = { color: 'green', icon: '⇈' };
     }
   
-    // Price Change Analysis
+    // Price Change Analysis for the trendPrediction
     if (priceChange > 0) {
       trendPrediction += ` Price has increased in the last ${period} days.`;
     } else if (priceChange < 0) {
       trendPrediction += ` Price has decreased in the last ${period} days.`;
     }
   
-    // Determine if the price change is significant
-    if (Math.abs(priceChange) > 0.10 * periodPrices[0]) { // 10% change considered significant
-      riseLevel = (priceChange > 0) ? 'a lot' : 'a lot, decreasing';
-    } else if (Math.abs(priceChange) > 0.05 * periodPrices[0]) {
-      riseLevel = (priceChange > 0) ? 'moderately' : 'moderately, decreasing';
+    // Determine if the price change is significant for the priceChangePrediction
+    const percentChange = (priceChange / periodPrices[0]) * 100;
+    if (Math.abs(percentChange) > 10) {
+      priceChangePrediction = `Expected price change: ${priceChange > 0 ? 'a lot' : 'a lot, decreasing'} (${percentChange.toFixed(2)}%)`;
+    } else if (Math.abs(percentChange) > 5) {
+      priceChangePrediction = `Expected price change: moderately (${percentChange.toFixed(2)}%)`;
     } else {
-      riseLevel = (priceChange > 0) ? 'little' : 'little, decreasing';
+      priceChangePrediction = `Expected price change: little (${percentChange.toFixed(2)}%)`;
     }
   
-    trendPrediction += ` In this period, the price is expected to ${riseLevel}.`;
-  
-    setPrediction(trendPrediction);
+    setPrediction(`${trendPrediction}\n${priceChangePrediction}`);
     setPredictionStyle(predictionStyle);
   };
 
@@ -371,7 +371,7 @@ function Home() {
           
         {/* version */}
         <div className={styles.version}>
-          v1.0.2
+          v1.0.3
         </div>
         </div>
         
