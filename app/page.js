@@ -105,7 +105,7 @@ function Home() {
   // Función para hacer la predicción de tendencia basada en el periodo seleccionado
   const makeTrendPrediction = (prices, period) => {
     if (period > 90) {
-      setPrediction('Selected period is too long for accurate prediction with technical analysis. Please choose a period up to 90 days.');
+      setPrediction('Selected period is too long for accurate prediction. Please choose up to 90 days.');
       setPredictionStyle({ color: 'orange', icon: '⚠️' });
       return;
     }
@@ -127,6 +127,7 @@ function Home() {
     const priceChange = currentPrice - periodPrices[0];
   
     let trendPrediction = 'No clear trend - Hold';
+    let priceChangePrediction = '';
     let predictionStyle = {};
   
     // RSI Analysis
@@ -166,14 +167,24 @@ function Home() {
       predictionStyle = { color: 'green', icon: '⇈' };
     }
   
-    // Price Change Analysis
+    // Price Change Analysis for the trendPrediction
     if (priceChange > 0) {
       trendPrediction += ` Price has increased in the last ${period} days.`;
     } else if (priceChange < 0) {
       trendPrediction += ` Price has decreased in the last ${period} days.`;
     }
   
-    setPrediction(trendPrediction);
+    // Determine if the price change is significant for the priceChangePrediction
+    const percentChange = (priceChange / periodPrices[0]) * 100;
+    if (Math.abs(percentChange) > 10) {
+      priceChangePrediction = `Expected price change: ${priceChange > 0 ? 'a lot' : 'a lot, decreasing'} (${percentChange.toFixed(2)}%)`;
+    } else if (Math.abs(percentChange) > 5) {
+      priceChangePrediction = `Expected price change: moderately (${percentChange.toFixed(2)}%)`;
+    } else {
+      priceChangePrediction = `Expected price change: little (${percentChange.toFixed(2)}%)`;
+    }
+  
+    setPrediction(`${trendPrediction}\n${priceChangePrediction}`);
     setPredictionStyle(predictionStyle);
   };
 
@@ -360,7 +371,7 @@ function Home() {
           
         {/* version */}
         <div className={styles.version}>
-          v1.0.2
+          v1.0.3
         </div>
         </div>
         

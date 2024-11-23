@@ -86,10 +86,17 @@ body::before {
 /* Estilos adicionales */
 .price {
   font-size: 1rem;
+  padding-left: 2%;
   font-weight: regular;
   color: #333;
 }
 
+.prediction-container {
+  font-size: 1rem;
+  font-weight: normal; /* or 400 for regular */
+  color: #333;
+  display: inline-block; /* This ensures that padding affects only the content, not the width of the parent */
+}
 .rsiValue {
   font-size: 1rem;
   margin-top: 10px;
