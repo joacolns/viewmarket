@@ -105,7 +105,7 @@ function Home() {
   // Función para hacer la predicción de tendencia basada en el periodo seleccionado
   const makeTrendPrediction = (prices, period) => {
     if (period > 90) {
-      setPrediction('Selected period is too long for accurate prediction with technical analysis. Please choose a period up to 90 days.');
+      setPrediction('Selected period is too long for accurate prediction. Please choose up to 90 days.');
       setPredictionStyle({ color: 'orange', icon: '⚠️' });
       return;
     }
@@ -128,8 +128,8 @@ function Home() {
   
     let trendPrediction = 'No clear trend - Hold';
     let predictionStyle = {};
+    let riseLevel = 'moderately';
   
-    // RSI Analysis
     if (rsi[rsi.length - 1] < 30) {
       if (macd[macd.length - 1] > signalLine[signalLine.length - 1] && currentPrice < lowerBand[lowerBand.length - 1]) {
         trendPrediction = `Strong potential for price increase in ${period} days - Consider buying soon.`;
@@ -172,6 +172,17 @@ function Home() {
     } else if (priceChange < 0) {
       trendPrediction += ` Price has decreased in the last ${period} days.`;
     }
+  
+    // Determine if the price change is significant
+    if (Math.abs(priceChange) > 0.10 * periodPrices[0]) { // 10% change considered significant
+      riseLevel = (priceChange > 0) ? 'a lot' : 'a lot, decreasing';
+    } else if (Math.abs(priceChange) > 0.05 * periodPrices[0]) {
+      riseLevel = (priceChange > 0) ? 'moderately' : 'moderately, decreasing';
+    } else {
+      riseLevel = (priceChange > 0) ? 'little' : 'little, decreasing';
+    }
+  
+    trendPrediction += ` In this period, the price is expected to ${riseLevel}.`;
   
     setPrediction(trendPrediction);
     setPredictionStyle(predictionStyle);
