@@ -1,5 +1,6 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react'; // Aseguramos que useRef esté importado
+import Login from './components/Login/login';
 import useCryptoData from './hooks/useCryptoData';
 import useChartHeight from './hooks/useChartHeight';
 import usePricePrediction from './hooks/usePricePrediction';
@@ -14,8 +15,8 @@ import styles from './page.module.css';
 function Home() {
   const [crypto, setCrypto] = useState('BTC');
   const [timePeriod, setTimePeriod] = useState(30);
-  const chartContainerRef = useRef(null);
-  
+  const chartContainerRef = useRef(null); // Necesario para calcular el alto del gráfico
+
   const chartHeight = useChartHeight(chartContainerRef);
   const { price, chartData, error, rsiValue, macdValue, bollingerBands } = useCryptoData(crypto, timePeriod);
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
@@ -58,4 +59,16 @@ function Home() {
   );
 }
 
-export default Home;
+export default function Page() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle('logged-in', isLoggedIn);
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return <Login setIsLoggedIn={setIsLoggedIn} />;
+  }
+
+  return <Home />;
+}

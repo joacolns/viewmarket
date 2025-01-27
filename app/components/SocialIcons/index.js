@@ -11,7 +11,7 @@ const SocialIcons = () => {
         <FaChartBar size={30} className="hover:text-gray-600 transition-colors" />
       </Link>
       <div className="border-r-xl version text-s bg-gray-200 rounded-full px-2 py-1">
-        v1.0.4
+        v1.1.0
       </div>
     </div>
   );

@@ -48,14 +48,17 @@ body, .container, .chart, .inputField, .price, .rsiValue, .text-red-500, .versio
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Helvetica, sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s; /* Añadir transición para un cambio suave */
+  transition: background-color 0.3s, color 0.3s; /* Transición suave */
   height: 90%;
   margin: 0;
   position: relative;
+  animation: fadeIn 1s ease-in-out; /* Animación siempre activa */
+}
+
+body.logged-in {
+  background-color: var(--background-color);
+  color: var(--text-color);
   padding-top: 220px;
-  animation: fadeIn 1s ease-in-out; /* Se aplica el fade-in a la carga */
 }
 
 /* Estilo para el logo */
@@ -63,13 +66,25 @@ body::before {
   content: '';
   position: absolute; /* Cambiado de fixed a absolute */
   top: 0; /* Sigue comenzando desde la parte superior */
-  left: 50%;
+  left: 50.2%;
   transform: translateX(-50%);
   background-image: url('../assets/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 350px;
   height: 350px;
+}
+
+body.logged-in .container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: -150px;
+  padding: 20px;
+}
+
+body.logged-in .chart {
+  margin-top: 20px;
 }
 /* Contenedor principal */
 .container {
