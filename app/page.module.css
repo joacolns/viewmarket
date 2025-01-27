@@ -1,4 +1,8 @@
-/* Animación de fade-in para la entrada de los elementos */
+@font-face {
+  font-family: 'Myriad';
+  src: url('./fonts/SFUIText-Regular.otf') format('opentype');
+}
+
 .container {
   width: 100%;
   max-width: 1200px;

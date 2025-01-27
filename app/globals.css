@@ -3,6 +3,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Myriad';
+  src: url('./fonts/SFUIText-Regular.otf') format('opentype');
+}
+
+body, .container, .chart, .inputField, .price, .rsiValue, .text-red-500, .version {
+  font-family: 'Myriad', sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -20,7 +29,6 @@
     width: 200px; /* Ajustar el tamaño del logo en móviles */
     height: 200px;
   }
-  
 }
 
 @media (max-width: 768px) {
@@ -28,7 +36,6 @@
     margin-top: 20px; /* Reduce el margen en móviles */
   }
 }
-
 
 @keyframes fadeIn {
   0% {
