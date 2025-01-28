@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
-import {LOGIN_USER0, LOGIN_PASSWORD0} from './credentials';
+//import {LOGIN_USER0, LOGIN_PASSWORD0} from './credentials';
  
 function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const USER = LOGIN_USER0;
-  const PSWD = LOGIN_PASSWORD0;
+  const USER = process.env.NEXT_PUBLIC_LOGIN_USER0;
+  const PSWD = process.env.NEXT_PUBLIC_LOGIN_PASSWORD0;
 
   const handleLogin = () => {
     if (username === USER && password === PSWD) {
