@@ -50,15 +50,6 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue, bollingerBands
           yAxisID: 'y1'
         },
         {
-          label: 'MACD',
-          data: Array(chartData.length).fill(macdValue),
-          borderColor: 'rgb(54, 162, 235)',
-          fill: false,
-          borderWidth: 2,
-          tension: 0.1,
-          yAxisID: 'y1'
-        },
-        {
           label: 'Bollinger Upper Band',
           data: Array(chartData.length).fill(bollingerBands?.upperBand ? bollingerBands.upperBand : 0),
           borderColor: 'rgb(153, 102, 255)',
