@@ -42,7 +42,7 @@ function Home() {
       />
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">We couldn't load the '{crypto}' token </p>}
         {chartData.length > 0 && (
           <ChartComponent
             crypto={crypto}
