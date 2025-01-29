@@ -26,11 +26,9 @@ const calculateBollingerBands = (data, period = 20) => {
 
   for (let i = 0; i < data.length; i++) {
     if (i < period - 1) {
-      // Rellena con null para los primeros puntos (no hay suficientes datos para calcular)
       upperBand.push(null);
       lowerBand.push(null);
     } else {
-      // Extrae los últimos "period" valores para calcular la SMA y la desviación estándar
       const slice = data.slice(i - period + 1, i + 1);
       const sma = slice.reduce((sum, value) => sum + value, 0) / period;
       const stdDev = Math.sqrt(
