@@ -10,6 +10,7 @@ import PriceDisplay from './components/PriceDisplay';
 import Indicators from './components/Indicators';
 import TimePeriodInput from './components/TimePeriodInput';
 import SocialIcons from './components/SocialIcons';
+import AIAssistant from './components/AI/AIAssistant';
 import styles from './page.module.css';
 
 function Home() {
@@ -18,7 +19,16 @@ function Home() {
   const chartContainerRef = useRef(null); // Necesario para calcular el alto del gráfico
 
   const chartHeight = useChartHeight(chartContainerRef);
-  const { price, chartData, error, rsiValue, macdValue, bollingerBands } = useCryptoData(crypto, timePeriod);
+  const { 
+    price, 
+    chartData, 
+    error, 
+    rsiValue, 
+    macdValue, 
+    bollingerBands,
+    priceChange24h
+  } = useCryptoData(crypto, timePeriod);
+
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
 
   return (
@@ -53,6 +63,21 @@ function Home() {
           />
         )}
       </div>
+
+      <AIAssistant 
+  crypto={crypto}
+  price={price}
+  indicators={{
+    rsi: rsiValue,
+    macd: macdValue,
+    bb: {
+      upper: bollingerBands?.upperBand?.slice(-1)[0],
+      middle: bollingerBands?.middleBand?.slice(-1)[0],
+      lower: bollingerBands?.lowerBand?.slice(-1)[0]
+    }
+  }}
+  change24h={priceChange24h?.toFixed(2) || '0.00'}
+/>
 
       <SocialIcons />
     </div>

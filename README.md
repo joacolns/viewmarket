@@ -54,7 +54,7 @@ To run the project locally, follow these steps:
 
 - [ ] Add more technical indicators (e.g., EMA, Stochastic Oscillator).
 - [ ] Integrate news updates for selected cryptocurrencies.
-- [ ] AI Assistant.
+- [X] AI Assistant (GPT-4o mini).
 - [X] Add support for additional time frames (e.g., 6 months, 1 year).
 - [ ] Visual Themes.
 - [ ] Improve prediction accuracy with machine learning models.
