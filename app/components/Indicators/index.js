@@ -1,4 +1,5 @@
 import useCryptoData from '../../hooks/useCryptoData';
+import Image from 'next/image';
 
 const cryptoImages = {
   BTC: 'https://cryptocompare.com/media/37746251/btc.png',
@@ -14,11 +15,13 @@ const CryptoPriceRow = ({ crypto, data }) => {
   return (
     <div className="flex justify-between items-center">
       <div className="flex items-center space-x-2">
-        <img 
-          src={cryptoImages[crypto]} 
-          alt={crypto} 
+        <Image
+          src={cryptoImages[crypto]}
+          alt={crypto}
+          width={18}  // Puedes ajustar este valor
+          height={18} // Puedes ajustar este valor
           className="w-6 h-6 rounded-full"
-        />
+      />
         <span className="font-medium">{crypto}</span>
       </div>
       
