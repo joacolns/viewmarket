@@ -33,7 +33,7 @@ function Home() {
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 pb-12 md:pb-4"> {/* Añade padding inferior */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4">
         <CryptoInput crypto={crypto} setCrypto={setCrypto} />
         <PriceDisplay 

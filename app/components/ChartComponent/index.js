@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -35,7 +36,6 @@ const calculateBollingerBands = (data, period = 20) => {
         slice.reduce((sum, value) => sum + Math.pow(value - sma, 2), 0) / period
       );
 
-      // Calcula las bandas
       upperBand.push(sma + 2 * stdDev);
       lowerBand.push(sma - 2 * stdDev);
     }
@@ -45,13 +45,20 @@ const calculateBollingerBands = (data, period = 20) => {
 };
 
 const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
-  // Calcula las Bandas de Bollinger
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const bollingerBands = calculateBollingerBands(chartData);
 
   return (
     <Line
       data={{
-        labels: chartData.map((_, index) => index), // Etiquetas del eje X
+        labels: chartData.map((_, index) => index),
         datasets: [
           {
             label: `${crypto} Price`,
@@ -61,10 +68,12 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             segment: {
               borderColor: (ctx) => {
                 const { p0, p1 } = ctx;
-                return p1.raw > p0.raw ? 'green' : 'red'; // Verde si sube, rojo si baja
+                return p1.raw > p0.raw ? 'green' : 'red';
               }
             },
-            tension: 0.1
+            tension: 0.1,
+            pointRadius: isMobile ? 0 : 3, // Oculta puntos en móvil
+            pointHoverRadius: isMobile ? 0 : 6
           },
           {
             label: 'RSI',
@@ -73,22 +82,28 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             fill: false,
             borderWidth: 2,
             tension: 0.1,
-            yAxisID: 'y1'
+            yAxisID: 'y1',
+            pointRadius: isMobile ? 0 : 3,
+            pointHoverRadius: isMobile ? 0 : 6
           },
           {
             label: 'Bollinger Upper Band',
             data: bollingerBands.upperBand,
             borderColor: 'rgb(153, 102, 255)',
-            fill: '+1', // Rellena el área entre la banda superior e inferior
+            fill: '+1',
             borderWidth: 1,
-            tension: 0.1
+            tension: 0.1,
+            pointRadius: isMobile ? 0 : 3,
+            pointHoverRadius: isMobile ? 0 : 6
           },
           {
             label: 'Bollinger Lower Band',
             data: bollingerBands.lowerBand,
             borderColor: 'rgb(255, 159, 64)',
             borderWidth: 1,
-            tension: 0.1
+            tension: 0.1,
+            pointRadius: isMobile ? 0 : 3,
+            pointHoverRadius: isMobile ? 0 : 6
           }
         ]
       }}
@@ -106,12 +121,12 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
           }
         },
         scales: {
-          x: { display: false }, // Oculta el eje X
+          x: { display: false },
           y: {
             position: 'left',
             beginAtZero: false,
           },
-          y1: { // Escala para RSI
+          y1: {
             position: 'right',
             min: 0,
             max: 100,
@@ -120,7 +135,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
         },
         elements: {
           line: {
-            spanGaps: true, // Dibuja líneas incluso si hay valores nulos
+            spanGaps: true,
           }
         }
       }}
