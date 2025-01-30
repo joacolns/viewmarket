@@ -56,7 +56,7 @@ To run the project locally, follow these steps:
 - [ ] Integrate news updates for selected cryptocurrencies.
 - [X] AI Assistant (GPT-4o mini).
 - [] Add support for additional time frames (e.g., 6 months, 1 year).
-- [ ] Visual Themes.
+- [X] Visual Themes.
 - [ ] Improve prediction accuracy with machine learning models.
 
 ## License
