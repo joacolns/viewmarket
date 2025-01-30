@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaRobot } from 'react-icons/fa';
 
 const AIAssistant = ({ crypto, price, indicators, change24h }) => {
@@ -15,7 +15,6 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
         body: JSON.stringify({ crypto, price, indicators, change24h })
       });
 
-      // Verificar si la respuesta es JSON
       const contentType = response.headers.get('content-type');
       if (!contentType?.includes('application/json')) {
         const rawResponse = await response.text();
@@ -33,13 +32,17 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
     setIsLoading(false);
   };
 
+  // Efecto para solicitar el análisis cada vez que se abre la ventana o cambia la crypto
+  useEffect(() => {
+    if (isOpen) {
+      getAIAnalysis();
+    }
+  }, [crypto, isOpen]);
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <button
-        onClick={() => {
-          setIsOpen(!isOpen);
-          if (!analysis) getAIAnalysis();
-        }}
+        onClick={() => setIsOpen(!isOpen)}
         className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg transition-all transform hover:scale-110 focus:outline-none"
       >
         <FaRobot />
@@ -47,28 +50,19 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
 
       {isOpen && (
         <div
-          className={`
-            absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border
-            animate-slide-up-fade-in
-          `}
+          className={`absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in`}
           style={{
-            backgroundColor: 'var(--card-bg)', // Fondo dinámico
-            color: 'var(--card-text)', // Texto dinámico
-            borderColor: 'var(--secondary)', // Borde dinámico
+            backgroundColor: 'var(--card-bg)',
+            color: 'var(--card-text)',
+            borderColor: 'var(--secondary)',
           }}
         >
           <h3 className="text-lg font-bold mb-4">Análisis de {crypto}</h3>
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">
-              <div
-                className="h-4 rounded w-3/4"
-                style={{ backgroundColor: 'var(--secondary)' }} // Fondo dinámico
-              ></div>
-              <div
-                className="h-4 rounded w-1/2"
-                style={{ backgroundColor: 'var(--secondary)' }} // Fondo dinámico
-              ></div>
+              <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}></div>
+              <div className="h-4 rounded w-1/2" style={{ backgroundColor: 'var(--secondary)' }}></div>
             </div>
           ) : (
             <div className="text-sm space-y-2">
