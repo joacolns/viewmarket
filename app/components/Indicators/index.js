@@ -18,15 +18,15 @@ const CryptoPriceRow = ({ crypto, data }) => {
         <Image
           src={cryptoImages[crypto]}
           alt={crypto}
-          width={18}  // Puedes ajustar este valor
-          height={18} // Puedes ajustar este valor
+          width={18}
+          height={18}
           className="w-6 h-6 rounded-full"
-      />
-        <span className="font-medium">{crypto}</span>
+        />
+        <span className="font-medium" style={{ color: 'var(--card-text)' }}>{crypto}</span>
       </div>
       
       <div className="flex items-center space-x-3">
-        <span>${data?.price?.toFixed(2) || '...'}</span>
+        <span style={{ color: 'var(--card-text)' }}>${data?.price?.toFixed(2) || '...'}</span>
         
         {data?.priceChange24h !== null && (
           <div className={`flex items-center space-x-1 ${changeColor}`}>
@@ -51,10 +51,16 @@ const Indicators = ({ rsiValue, macdValue, bollingerBands, timePeriod }) => {
   const ethData = useCryptoData('ETH', timePeriod);
   const bnbData = useCryptoData('BNB', timePeriod);
 
-
   return (
-    <div className="flex flex-col md:flex-row gap-4"> 
-      <div className="w-full md:w-2/3 bg-gray-100 rounded-3xl p-4">
+    <div className="flex flex-col md:flex-row gap-4">
+      {/* Contenedor de indicadores técnicos */}
+      <div
+        className="w-full md:w-2/3 rounded-3xl p-4"
+        style={{
+          backgroundColor: 'var(--card-bg)',
+          color: 'var(--card-text)',
+        }}
+      >
         <div className="space-y-1">
           <p>RSI Value: {rsiValue?.toFixed(2) || 'Loading...'}</p>
           <p>MACD Value: {macdValue?.toFixed(2) || 'Loading...'}</p>
@@ -63,15 +69,20 @@ const Indicators = ({ rsiValue, macdValue, bollingerBands, timePeriod }) => {
         </div>
       </div>
 
-      <div className="w-full md:w-1/3 bg-gray-100 rounded-3xl p-4">
+      {/* Contenedor de precios de criptomonedas */}
+      <div
+        className="w-full md:w-1/3 rounded-3xl p-4"
+        style={{
+          backgroundColor: 'var(--card-bg)',
+          color: 'var(--card-text)',
+        }}
+      >
         <div className="space-y-1">
           <CryptoPriceRow crypto="BTC" data={btcData} />
           <CryptoPriceRow crypto="ETH" data={ethData} />
           <CryptoPriceRow crypto="BNB" data={bnbData} />
         </div>
       </div>
-      
-
     </div>
   );
 };

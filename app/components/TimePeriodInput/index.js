@@ -9,7 +9,12 @@ const TimePeriodInput = ({ timePeriod, setTimePeriod }) => {
           id="timePeriod"
           value={timePeriod}
           onChange={(e) => setTimePeriod(Math.max(0, Math.min(200, Number(e.target.value))))}
-          className="relative z-10 p-3 border rounded-md w-full md:w-1/12 bg-white"
+          className="relative z-10 p-3 border rounded-md w-full md:w-1/12"
+          style={{
+            backgroundColor: 'var(--card-bg)', // Fondo basado en el tema
+            color: 'var(--card-text)', // Texto basado en el tema
+            borderColor: 'var(--secondary)', // Borde basado en el tema
+          }}
           min="0"
         />
       </div>

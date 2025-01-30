@@ -11,6 +11,7 @@ import Indicators from './components/Indicators';
 import TimePeriodInput from './components/TimePeriodInput';
 import SocialIcons from './components/SocialIcons';
 import AIAssistant from './components/AI/AIAssistant';
+import ThemeToggle from './components/Themes/ThemeToggle';
 import styles from './page.module.css';
 
 function Home() {
@@ -42,6 +43,8 @@ function Home() {
           predictionStyle={predictionStyle} 
         />
       </div>
+
+      <ThemeToggle /> 
 
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
