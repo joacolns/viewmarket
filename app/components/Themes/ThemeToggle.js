@@ -1,4 +1,3 @@
-// components/ThemeToggle.js
 import { useState, useEffect } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 
@@ -25,7 +24,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="fixed top-4 right-4 p-3 rounded-xl bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-600 transition-colors"
+      className="fixed top-4 right-4 p-3 rounded-xl bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-600 transition-colors z-[1000]"
       aria-label="Cambiar tema"
     >
       {isDarkMode ? <FaSun /> : <FaMoon />}
