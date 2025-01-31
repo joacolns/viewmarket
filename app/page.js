@@ -44,8 +44,6 @@ function Home() {
         />
       </div>
 
-      <ThemeToggle /> 
-
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
       <Indicators 
@@ -81,6 +79,8 @@ function Home() {
   }}
   change24h={priceChange24h?.toFixed(2) || '0.00'}
 />
+
+      <ThemeToggle />
 
       <SocialIcons />
     </div>

@@ -73,37 +73,37 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             },
             tension: 0.1,
             pointRadius: isMobile ? 0 : 3, // Oculta puntos en móvil
-            pointHoverRadius: isMobile ? 0 : 6
+            pointHoverRadius: isMobile ? 6 : 6
           },
           {
             label: 'RSI',
             data: Array(chartData.length).fill(rsiValue),
             borderColor: 'rgb(255, 99, 132)',
             fill: false,
-            borderWidth: 2,
+            borderWidth: 4,
             tension: 0.1,
             yAxisID: 'y1',
-            pointRadius: isMobile ? 0 : 3,
-            pointHoverRadius: isMobile ? 0 : 6
+            pointRadius: isMobile ? 0 : 0,
+            pointHoverRadius: isMobile ? 6 : 6
           },
           {
             label: 'Bollinger Upper Band',
             data: bollingerBands.upperBand,
             borderColor: 'rgb(153, 102, 255)',
             fill: '+1',
-            borderWidth: 1,
+            borderWidth: 2,
             tension: 0.1,
-            pointRadius: isMobile ? 0 : 3,
-            pointHoverRadius: isMobile ? 0 : 6
+            pointRadius: isMobile ? 0 : 1,
+            pointHoverRadius: isMobile ? 6 : 6
           },
           {
             label: 'Bollinger Lower Band',
             data: bollingerBands.lowerBand,
             borderColor: 'rgb(255, 159, 64)',
-            borderWidth: 1,
+            borderWidth: 2,
             tension: 0.1,
-            pointRadius: isMobile ? 0 : 3,
-            pointHoverRadius: isMobile ? 0 : 6
+            pointRadius: isMobile ? 0 : 1,
+            pointHoverRadius: isMobile ? 6 : 6
           }
         ]
       }}

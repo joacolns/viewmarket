@@ -77,6 +77,14 @@ body::before {
   filter: invert(0); /* Invierte los colores del logo en modo oscuro */
 }
 
+@media (max-width: 768px) {
+  body::before {
+    width: 280px; /* Reduce el tamaño del logo */
+    height: 280px;
+  }
+}
+
+
 [data-theme="dark"] body::before {
   filter: invert(1);
 }
