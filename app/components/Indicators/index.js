@@ -14,7 +14,7 @@ const CryptoPriceRow = ({ crypto, data }) => {
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2" >
         <Image
           src={cryptoImages[crypto]}
           alt={crypto}
@@ -27,9 +27,8 @@ const CryptoPriceRow = ({ crypto, data }) => {
       
       <div className="flex items-center space-x-3">
         <span style={{ color: 'var(--card-text)' }}>${data?.price?.toFixed(2) || '...'}</span>
-        
         {data?.priceChange24h !== null && (
-          <div className={`flex items-center space-x-1 ${changeColor}`}>
+          <div style={{backgroundColor: 'var(--card-bg)'}} className={`flex items-center space-x-1 ${changeColor}`}>
             <span>{arrow}</span>
             <div className="text-right">
               <div className="text-sm font-bold">
