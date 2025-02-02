@@ -25,7 +25,7 @@ const CryptoPriceRow = ({ crypto, data }) => {
         <span className="font-medium" style={{ color: 'var(--card-text)' }}>{crypto}</span>
       </div>
       
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center">
         <span style={{ color: 'var(--card-text)' }}>${data?.price?.toFixed(2) || '...'}</span>
         {data?.priceChange24h !== null && (
           <div style={{backgroundColor: 'var(--card-bg)'}} className={`flex items-center space-x-1 ${changeColor}`}>
