@@ -61,7 +61,9 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">
-              <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}></div>
+              <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}>
+               Generando análasis...
+              </div>
               <div className="h-4 rounded w-1/2" style={{ backgroundColor: 'var(--secondary)' }}></div>
             </div>
           ) : (

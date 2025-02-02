@@ -10,7 +10,7 @@ const CryptoInput = ({ crypto, setCrypto }) => {
         color: 'var(--card-text)', // Texto basado en el tema
         borderColor: 'var(--secondary)', // Borde basado en el tema
       }}
-      placeholder="Symbol"
+      placeholder="Token"
     />
   );
 };

@@ -18,9 +18,9 @@ const useCryptoData = (crypto, timePeriod) => {
     const fetchData = async () => {
       try {
         const [priceRes, historyRes, twentyFourHRes] = await Promise.all([
-          axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${crypto}&tsyms=USD`),
-          axios.get(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${crypto}&tsym=USD&limit=200`),
-          axios.get(`https://min-api.cryptocompare.com/data/v2/histohour?fsym=${crypto}&tsym=USD&limit=24`)
+          axios.get(process.env.NEXT_PUBLIC_CRYPTO_DATA + `price?fsym=${crypto}&tsyms=USD`),
+          axios.get(process.env.NEXT_PUBLIC_CRYPTO_DATA + `v2/histoday?fsym=${crypto}&tsym=USD&limit=200`),
+          axios.get(process.env.NEXT_PUBLIC_CRYPTO_DATA + `v2/histohour?fsym=${crypto}&tsym=USD&limit=24`)
         ]);
 
         const prices = historyRes.data.Data.Data.map(d => d.close);
@@ -34,7 +34,6 @@ const useCryptoData = (crypto, timePeriod) => {
         const previousClose = historicalData[0].close;
 
         const priceChange = ((currentPrice - previousClose) / previousClose) * 100;
-
 
         const indicators = {
           rsi: calculateRSI(prices),
