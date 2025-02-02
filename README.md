@@ -57,7 +57,7 @@ To run the project locally, follow these steps:
 - [X] AI Assistant (GPT-4o mini).
 - [ ] Add support for additional time frames (e.g., 6 months, 1 year).
 - [X] Visual Themes.
-- [ ] Add company symbols.
+- [ ] Add stocks.
 - [ ] Improve prediction accuracy with machine learning models.
 
 ## License
