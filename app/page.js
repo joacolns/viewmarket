@@ -12,12 +12,23 @@ import TimePeriodInput from './components/TimePeriodInput';
 import SocialIcons from './components/SocialIcons';
 import AIAssistant from './components/AI/AIAssistant';
 import ThemeToggle from './components/Themes/ThemeToggle';
+import ModeToggle from './components/ModeToggle';
 import styles from './page.module.css';
+import StockInput from './components/StockInput/StockInput';
+import useStockData from './hooks/useStockData';
 
 function Home() {
+  const [mode, setMode] = useState('crypto');
   const [crypto, setCrypto] = useState('BTC');
+  const [stock, setStock] = useState('TSLA');
   const [timePeriod, setTimePeriod] = useState(30);
   const chartContainerRef = useRef(null); // Necesario para calcular el alto del gráfico
+
+  const cryptoData = useCryptoData(mode === 'crypto' ? crypto : null, timePeriod);
+  const stockData = useStockData(mode === 'stocks' ? stock : null, timePeriod);
+
+  const activeData = mode === 'crypto' ? cryptoData : stockData;
+  const assetSymbol = mode === 'crypto' ? crypto : stock;
 
   const chartHeight = useChartHeight(chartContainerRef);
   const { 
@@ -34,8 +45,23 @@ function Home() {
 
   return (
     <div className="container mx-auto p-4 pb-12 md:pb-4"> {/* Añade padding inferior */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
-        <CryptoInput crypto={crypto} setCrypto={setCrypto} />
+      <ModeToggle mode={mode} setMode={setMode} />
+      <ThemeToggle />
+
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+        {mode === 'crypto' ? (
+          <CryptoInput
+            crypto={crypto}
+            setCrypto={setCrypto}
+            clearStock={() => setStock('')}
+          />
+        ) : (
+          <StockInput
+            stock={stock}
+            setStock={setStock}
+            clearCrypto={() => setCrypto('')}
+          />
+        )}
         <PriceDisplay 
           price={price} 
           chartData={chartData} 
