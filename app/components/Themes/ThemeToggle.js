@@ -54,7 +54,6 @@ const ThemeToggle = () => {
         />
       </div>
       
-      {/* Efecto de partículas al hacer click */}
       <div className={`absolute inset-0 flex justify-center items-center
         ${isClicked ? 'opacity-100' : 'opacity-0'}
         transition-opacity duration-300`}>

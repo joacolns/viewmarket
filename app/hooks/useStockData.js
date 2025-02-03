@@ -22,13 +22,11 @@ const useStockData = (stock, timePeriod) => {
         );
         
         const timeSeries = response.data['Time Series (Daily)'];
-        // Convertir el objeto a un array y tomar los primeros 200 puntos
         const prices = Object.values(timeSeries)
           .slice(0, 200)
           .map(entry => parseFloat(entry['4. close']))
           .reverse();
 
-        // Calcular el cambio en 24h: diferencia entre el último precio y el anterior
         const currentPrice = prices[prices.length - 1];
         const previousPrice = prices[prices.length - 2];
         const priceChangeAbs24h = currentPrice - previousPrice;

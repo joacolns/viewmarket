@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useRef, useEffect } from 'react';
 import Login from './components/Login/login';
 import useCryptoData from './hooks/useCryptoData';
@@ -15,7 +16,6 @@ import SocialIcons from './components/SocialIcons';
 import AIAssistant from './components/AI/AIAssistant';
 import ThemeToggle from './components/Themes/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
-import styles from './page.module.css';
 
 function Home() {
   const [mode, setMode] = useState('crypto');
@@ -51,12 +51,12 @@ function Home() {
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
       <Indicators 
-  rsiValue={rsiValue} 
-  macdValue={macdValue} 
-  bollingerBands={bollingerBands} 
-  timePeriod={timePeriod} 
-  mode={mode}  // <- Asegúrate de pasar esta prop
-/>
+      rsiValue={rsiValue} 
+      macdValue={macdValue} 
+      bollingerBands={bollingerBands} 
+      timePeriod={timePeriod} 
+      mode={mode}
+      />
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
         {error && <p className="text-red-500">We couldn&apos;t load the &apos;{assetSymbol}&apos; data</p>}
@@ -72,13 +72,15 @@ function Home() {
       </div>
 
       <AIAssistant 
-  asset={mode === 'crypto' ? crypto : stock}
-  mode={mode}
-  price={price}
-  indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }}
-  change24h={mode === 'crypto' ? priceChange24h : undefined}
-/>
+        asset={mode === 'crypto' ? crypto : stock}
+        mode={mode}
+        price={price}
+        indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }}
+        change24h={mode === 'crypto' ? priceChange24h : undefined}
+      />
+
       <ThemeToggle />
+
       <SocialIcons />
     </div>
   );

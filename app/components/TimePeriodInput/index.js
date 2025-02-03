@@ -11,9 +11,9 @@ const TimePeriodInput = ({ timePeriod, setTimePeriod }) => {
           onChange={(e) => setTimePeriod(Math.max(0, Math.min(200, Number(e.target.value))))}
           className="relative z-10 p-3 border rounded-md w-full md:w-1/12"
           style={{
-            backgroundColor: 'var(--card-bg)', // Fondo basado en el tema
-            color: 'var(--card-text)', // Texto basado en el tema
-            borderColor: 'var(--secondary)', // Borde basado en el tema
+            backgroundColor: 'var(--card-bg)',
+            color: 'var(--card-text)',
+            borderColor: 'var(--secondary)',
           }}
           min="0"
         />

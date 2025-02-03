@@ -33,7 +33,6 @@ const ModeToggle = ({ mode, setMode }) => {
         <FaBitcoin className="text-white text-xl transition-transform duration-300" />
       )}
       
-      {/* Efecto de partículas al hacer click */}
       <div
         className={`absolute inset-0 flex justify-center items-center
           ${isClicked ? 'opacity-100' : 'opacity-0'}

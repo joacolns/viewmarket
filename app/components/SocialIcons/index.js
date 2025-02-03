@@ -19,8 +19,8 @@ const SocialIcons = () => {
       <div
         className="version text-s rounded-full px-2 py-1"
         style={{
-          backgroundColor: 'var(--card-bg)', // Fondo dinámico
-          color: 'var(--card-text)', // Texto dinámico
+          backgroundColor: 'var(--card-bg)',
+          color: 'var(--card-text)',
         }}
       >
         v1.1.0
