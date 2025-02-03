@@ -61,7 +61,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
         labels: chartData.map((_, index) => index),
         datasets: [
           {
-            label: `${crypto} Price`,
+            label: `Price`,
             data: chartData,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
