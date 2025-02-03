@@ -50,7 +50,13 @@ function Home() {
 
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
-      <Indicators rsiValue={rsiValue} macdValue={macdValue} bollingerBands={bollingerBands} />
+      <Indicators 
+  rsiValue={rsiValue} 
+  macdValue={macdValue} 
+  bollingerBands={bollingerBands} 
+  timePeriod={timePeriod} 
+  mode={mode}  // <- Asegúrate de pasar esta prop
+/>
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
         {error && <p className="text-red-500">We couldn&apos;t load the &apos;{assetSymbol}&apos; data</p>}

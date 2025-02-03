@@ -4,7 +4,7 @@ dotenv.config({ path: './credentials.env' });
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['cryptocompare.com'],
+    domains: ['cryptocompare.com', 'logo.clearbit.com'],
   },
 };
 
