@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaEthereum } from 'react-icons/fa';
-//import {LOGIN_USER0, LOGIN_PASSWORD0} from './credentials';
- 
+
 function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -48,8 +47,9 @@ function Login({ setIsLoggedIn }) {
         </div>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <button
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex items-center justify-center"
           onClick={handleLogin}
+          className="w-full bg-blue-500 text-white p-2 rounded flex items-center justify-center
+                     transition transform duration-300 hover:scale-105 hover:bg-blue-600"
         >
           <FaEthereum />
         </button>
