@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FaBitcoin, FaChartLine } from 'react-icons/fa';
 
 const ModeToggle = ({ mode, setMode }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -26,9 +27,12 @@ const ModeToggle = ({ mode, setMode }) => {
         group`}
       aria-label="Cambiar modo"
     >
-      <span className="text-white font-medium">
-        {mode === 'crypto' ? '🔀 Stocks' : '🔀 Crypto'}
-      </span>
+      {mode === 'crypto' ? (
+        <FaChartLine className="text-white text-xl transition-transform duration-300" />
+      ) : (
+        <FaBitcoin className="text-white text-xl transition-transform duration-300" />
+      )}
+      
       {/* Efecto de partículas al hacer click */}
       <div
         className={`absolute inset-0 flex justify-center items-center
