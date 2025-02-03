@@ -6,8 +6,12 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const [analysis, setAnalysis] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const assetType = mode === 'crypto' ? 'Criptomoneda' : 'Acción';
-  const assetLabel = asset && asset.trim() !== '' ? asset : 'Activo desconocido';
+  useEffect(() => {
+    console.log("Modo:", mode, "Activo:", asset); // Debug para verificar valores correctos
+  }, [mode, asset]);
+
+  const assetType = mode;
+  const assetLabel = asset && asset.trim() !== '' ? asset : 'Símbolo no disponible';
 
   const getAIAnalysis = async () => {
     setIsLoading(true);
@@ -58,7 +62,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
             borderColor: 'var(--secondary)',
           }}
         >
-          <h3 className="text-lg font-bold mb-4">Análisis de {assetLabel} ({assetType})</h3>
+          <h3 className="text-lg font-bold mb-4">Análisis de {assetLabel}</h3>
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">

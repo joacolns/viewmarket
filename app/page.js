@@ -31,6 +31,8 @@ function Home() {
   const { price, chartData, error, rsiValue, macdValue, bollingerBands } = activeData;
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
   const chartHeight = useChartHeight(chartContainerRef);
+  
+  const priceChange24h = mode === 'crypto' ? cryptoData.priceChange24h : undefined;
 
   return (
     <div className="container mx-auto p-4 pb-12 md:pb-4">
@@ -63,7 +65,13 @@ function Home() {
         )}
       </div>
 
-      <AIAssistant crypto={crypto} price={price} indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }} />
+      <AIAssistant 
+  asset={mode === 'crypto' ? crypto : stock}
+  mode={mode}
+  price={price}
+  indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }}
+  change24h={mode === 'crypto' ? priceChange24h : undefined}
+/>
       <ThemeToggle />
       <SocialIcons />
     </div>
