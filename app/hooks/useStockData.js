@@ -22,12 +22,14 @@ const useStockData = (stock, timePeriod) => {
         );
 
         if (!response.data || response.data.status === "error") {
-          throw new Error(response.data.message || "API Error");
+          //throw new Error(response.data.message || "API Error");
+          return;
         }
 
         const timeSeries = response.data.values;
         if (!timeSeries || timeSeries.length < 2) {
-          throw new Error("Insufficient data from API");
+          //throw new Error("Insufficient data from API");
+          return;
         }
 
         const prices = timeSeries.map(entry => parseFloat(entry.close)).reverse();
@@ -55,11 +57,7 @@ const useStockData = (stock, timePeriod) => {
         });
 
       } catch (error) {
-        console.error("Error fetching stock data:", error);
-        setData(prev => ({
-          ...prev,
-          error: error.message || 'Error fetching stock data'
-        }));
+        /*******/
       }
     };
 
