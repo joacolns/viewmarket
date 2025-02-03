@@ -2,6 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { calculateRSI, calculateMACD, calculateBollingerBands } from '../indicators';
 
+const API_KEY = process.env.NEXT_PUBLIC_TWELVE_DATA_KEY;
+const BASE_URL = 'https://api.twelvedata.com/time_series';
+
 const useStockData = (stock, timePeriod) => {
   const [data, setData] = useState({
     price: null,
@@ -15,14 +18,17 @@ const useStockData = (stock, timePeriod) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stock}&apikey=${process.env.NEXT_PUBLIC_ALPHAVANTAGE_KEY}`
-        );
-        
-        const timeSeries = response.data['Time Series (Daily)'];
-        const prices = Object.values(timeSeries)
-          .slice(0, 200)
-          .map(entry => parseFloat(entry['4. close']))
+        const response = await axios.get(BASE_URL, {
+          params: {
+            symbol: stock,
+            interval: '1day',
+            outputsize: '200',
+            apikey: API_KEY,
+          },
+        });
+
+        const prices = response.data.values
+          .map(entry => parseFloat(entry.close))
           .reverse();
 
         const indicators = {
@@ -54,4 +60,4 @@ const useStockData = (stock, timePeriod) => {
   return data;
 };
 
-export default useStockData; // Asegúrate de exportar como default
+export default useStockData;

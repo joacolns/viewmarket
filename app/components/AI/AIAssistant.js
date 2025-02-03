@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { FaRobot } from 'react-icons/fa';
 
-const AIAssistant = ({ crypto, price, indicators, change24h }) => {
+const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [analysis, setAnalysis] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const assetType = mode === 'crypto' ? 'Criptomoneda' : 'Acción';
+  const assetLabel = asset && asset.trim() !== '' ? asset : 'Activo desconocido';
 
   const getAIAnalysis = async () => {
     setIsLoading(true);
@@ -12,7 +15,7 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
       const response = await fetch('../../backend/api/ai-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ crypto, price, indicators, change24h })
+        body: JSON.stringify({ asset: assetLabel, mode, price, indicators, change24h })
       });
 
       const contentType = response.headers.get('content-type');
@@ -23,21 +26,19 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
       }
 
       const data = await response.json();
-      setAnalysis(data.analysis || data.error);
-
+      setAnalysis(data.analysis?.replace(/la acción/gi, assetType) || `No se pudo generar un análisis para ${assetLabel}`);
     } catch (error) {
       console.error('Error completo:', error);
-      setAnalysis('Error: ' + error.message);
+      setAnalysis(`Error: ${error.message}`);
     }
     setIsLoading(false);
   };
 
-  // Efecto para solicitar el análisis cada vez que se abre la ventana o cambia la crypto
   useEffect(() => {
     if (isOpen) {
       getAIAnalysis();
     }
-  }, [crypto, isOpen]);
+  }, [asset, mode, isOpen]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -57,12 +58,12 @@ const AIAssistant = ({ crypto, price, indicators, change24h }) => {
             borderColor: 'var(--secondary)',
           }}
         >
-          <h3 className="text-lg font-bold mb-4">Análisis de {crypto}</h3>
+          <h3 className="text-lg font-bold mb-4">Análisis de {assetLabel} ({assetType})</h3>
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">
               <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}>
-               Generando análasis...
+                Generando análisis...
               </div>
               <div className="h-4 rounded w-1/2" style={{ backgroundColor: 'var(--secondary)' }}></div>
             </div>

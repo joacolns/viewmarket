@@ -59,10 +59,10 @@ const usePricePrediction = (chartData, timePeriod) => {
 
       // Bollinger Bands Analysis
       if (currentPrice > upperBand[upperBand.length - 1] && rsi[rsi.length - 1] > 70) {
-        trendPrediction = `Overbought conditions, expect price to pull back - Consider profit-taking.`;
+        trendPrediction = `Overbought conditions, expect price to pull back - Profit-taking.`;
         predictionStyle = { color: 'red', icon: '⇊' };
       } else if (currentPrice < lowerBand[lowerBand.length - 1] && rsi[rsi.length - 1] < 30) {
-        trendPrediction = `Oversold conditions, expect price to bounce back - Consider buying.`;
+        trendPrediction = `Oversold conditions, expect price to bounce back - Buy.`;
         predictionStyle = { color: 'green', icon: '⇈' };
       }
 

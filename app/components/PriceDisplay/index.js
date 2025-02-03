@@ -1,9 +1,9 @@
-const PriceDisplay = ({ price, chartData, prediction, predictionStyle }) => {
+const PriceDisplay = ({ price, chartData, prediction, predictionStyle, mode }) => {
   return (
     <div className="price text-lg font-bold mb-2 md:mb-0">
       {price && chartData.length > 1 && (
         <p>
-          Price: ${price.toFixed(8)}
+          {mode === 'crypto' ? 'Crypto Price' : 'Stock Price'}: ${price.toFixed(2)}
           <span className={chartData[chartData.length - 1] > chartData[chartData.length - 2] ? 'text-green-500' : 'text-red-500'}>
             ({chartData[chartData.length - 1] > chartData[chartData.length - 2] ? '↑' : '↓'}
             {Math.abs(

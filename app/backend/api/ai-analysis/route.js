@@ -8,15 +8,21 @@ export async function POST(request) {
         apiKey: process.env.OPENAI_API_KEY
       });
   
+      const mode = requestData.mode;
+      const assetType = mode === 'crypto' ? 'Criptomoneda' : 'Acción';
+      const promptRole = mode === 'crypto' 
+        ? "Eres un experto en análisis cripto. Proporciona recomendaciones de inversión concisas (máximo 150 palabras) basadas en estos datos técnicos:"
+        : "Eres un experto en análisis bursátil. Proporciona recomendaciones de inversión concisas (máximo 150 palabras) basadas en estos datos técnicos:";
+  
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [{
           role: "system",
-          content: "Eres un experto en análisis cripto. Proporciona recomendaciones de inversión concisas (máximo 150 palabras) basadas en estos datos técnicos:"
+          content: promptRole
         }, {
           role: "user",
           content: `
-            Criptomoneda: ${requestData.crypto}
+            ${assetType}: ${requestData.asset}
             Precio actual: $${requestData.price}
             Cambio 24h: ${requestData.change24h}%
             RSI: ${requestData.indicators.rsi}
@@ -30,7 +36,8 @@ export async function POST(request) {
       });
 
       console.log('Datos recibidos:', {
-        crypto: requestData.crypto,
+        asset: requestData.asset,
+        mode: requestData.mode,
         price: requestData.price,
         change24h: requestData.change24h,
         rsi: requestData.indicators.rsi,
@@ -57,5 +64,5 @@ export async function POST(request) {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
         });
-      }
     }
+}

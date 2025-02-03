@@ -1,11 +1,13 @@
 'use client';
-import { useState, useRef, useEffect } from 'react'; // Aseguramos que useRef esté importado
+import { useState, useRef, useEffect } from 'react';
 import Login from './components/Login/login';
 import useCryptoData from './hooks/useCryptoData';
+import useStockData from './hooks/useStockData';
 import useChartHeight from './hooks/useChartHeight';
 import usePricePrediction from './hooks/usePricePrediction';
 import ChartComponent from './components/ChartComponent';
 import CryptoInput from './components/CryptoInput';
+import StockInput from './components/StockInput/StockInput';
 import PriceDisplay from './components/PriceDisplay';
 import Indicators from './components/Indicators';
 import TimePeriodInput from './components/TimePeriodInput';
@@ -14,72 +16,42 @@ import AIAssistant from './components/AI/AIAssistant';
 import ThemeToggle from './components/Themes/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
 import styles from './page.module.css';
-import StockInput from './components/StockInput/StockInput';
-import useStockData from './hooks/useStockData';
 
 function Home() {
   const [mode, setMode] = useState('crypto');
   const [crypto, setCrypto] = useState('BTC');
   const [stock, setStock] = useState('TSLA');
   const [timePeriod, setTimePeriod] = useState(30);
-  const chartContainerRef = useRef(null); // Necesario para calcular el alto del gráfico
+  const chartContainerRef = useRef(null);
 
   const cryptoData = useCryptoData(mode === 'crypto' ? crypto : null, timePeriod);
   const stockData = useStockData(mode === 'stocks' ? stock : null, timePeriod);
-
   const activeData = mode === 'crypto' ? cryptoData : stockData;
   const assetSymbol = mode === 'crypto' ? crypto : stock;
-
-  const chartHeight = useChartHeight(chartContainerRef);
-  const { 
-    price, 
-    chartData, 
-    error, 
-    rsiValue, 
-    macdValue, 
-    bollingerBands,
-    priceChange24h
-  } = useCryptoData(crypto, timePeriod);
-
+  const { price, chartData, error, rsiValue, macdValue, bollingerBands } = activeData;
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
+  const chartHeight = useChartHeight(chartContainerRef);
 
   return (
-    <div className="container mx-auto p-4 pb-12 md:pb-4"> {/* Añade padding inferior */}
+    <div className="container mx-auto p-4 pb-12 md:pb-4">
       <ModeToggle mode={mode} setMode={setMode} />
       <ThemeToggle />
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
         {mode === 'crypto' ? (
-          <CryptoInput
-            crypto={crypto}
-            setCrypto={setCrypto}
-            clearStock={() => setStock('')}
-          />
+          <CryptoInput crypto={crypto} setCrypto={setCrypto} clearStock={() => setStock('')} />
         ) : (
-          <StockInput
-            stock={stock}
-            setStock={setStock}
-            clearCrypto={() => setCrypto('')}
-          />
+          <StockInput stock={stock} setStock={setStock} clearCrypto={() => setCrypto('')} />
         )}
-        <PriceDisplay 
-          price={price} 
-          chartData={chartData} 
-          prediction={prediction} 
-          predictionStyle={predictionStyle} 
-        />
+        <PriceDisplay price={price} chartData={chartData} prediction={prediction} predictionStyle={predictionStyle} mode={mode} />
       </div>
 
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
-      <Indicators 
-        rsiValue={rsiValue} 
-        macdValue={macdValue} 
-        bollingerBands={bollingerBands} 
-      />
+      <Indicators rsiValue={rsiValue} macdValue={macdValue} bollingerBands={bollingerBands} />
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
-      {error && <p className="text-red-500">We couldn&apos;t load the &apos;{crypto}&apos; token </p>}
+        {error && <p className="text-red-500">We couldn&apos;t load the &apos;{assetSymbol}&apos; data</p>}
         {chartData.length > 0 && (
           <ChartComponent
             crypto={crypto}
@@ -91,23 +63,8 @@ function Home() {
         )}
       </div>
 
-      <AIAssistant 
-  crypto={crypto}
-  price={price}
-  indicators={{
-    rsi: rsiValue,
-    macd: macdValue,
-    bb: {
-      upper: bollingerBands?.upperBand?.slice(-1)[0],
-      middle: bollingerBands?.middleBand?.slice(-1)[0],
-      lower: bollingerBands?.lowerBand?.slice(-1)[0]
-    }
-  }}
-  change24h={priceChange24h?.toFixed(2) || '0.00'}
-/>
-
+      <AIAssistant crypto={crypto} price={price} indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }} />
       <ThemeToggle />
-
       <SocialIcons />
     </div>
   );
