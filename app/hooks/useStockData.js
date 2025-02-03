@@ -18,14 +18,19 @@ const useStockData = (stock, timePeriod) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stock}&outputsize=full&apikey=${process.env.NEXT_PUBLIC_ALPHAVANTAGE_KEY}`
+          `https://api.twelvedata.com/time_series?symbol=${stock}&interval=1day&outputsize=200&apikey=${process.env.NEXT_PUBLIC_TWELVE_DATA_KEY}`
         );
-        
-        const timeSeries = response.data['Time Series (Daily)'];
-        const prices = Object.values(timeSeries)
-          .slice(0, 200)
-          .map(entry => parseFloat(entry['4. close']))
-          .reverse();
+
+        if (!response.data || response.data.status === "error") {
+          throw new Error(response.data.message || "API Error");
+        }
+
+        const timeSeries = response.data.values;
+        if (!timeSeries || timeSeries.length < 2) {
+          throw new Error("Insufficient data from API");
+        }
+
+        const prices = timeSeries.map(entry => parseFloat(entry.close)).reverse();
 
         const currentPrice = prices[prices.length - 1];
         const previousPrice = prices[prices.length - 2];
@@ -50,9 +55,10 @@ const useStockData = (stock, timePeriod) => {
         });
 
       } catch (error) {
+        console.error("Error fetching stock data:", error);
         setData(prev => ({
           ...prev,
-          error: 'Error fetching stock data'
+          error: error.message || 'Error fetching stock data'
         }));
       }
     };
