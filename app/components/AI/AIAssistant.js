@@ -83,6 +83,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
               </div>
             </div>
           ) : (
+            // Se agrega un contenedor con altura máxima y scroll vertical
             <div className="max-h-60 overflow-y-auto">
               <p className="animate-fade-in" style={{ color: 'var(--card-text)' }}>
                 {analysis}
@@ -99,17 +100,20 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
 
           <button 
             onClick={() => getAIAnalysis({ actionQuery: true })} 
-           className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
+             className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
           >
             ¿Compro o vendo?
           </button>
 
           <button 
             onClick={() => getAIAnalysis({ holdQuery: true })} 
-           className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
+            className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
           >
             ¿Mantengo?
           </button>
+          <div className="mt-4 text-xs" style={{ color: 'var(--secondary)' }}>
+                * Análisis generado por IA
+          </div>
         </div>
       )}
     </div>
