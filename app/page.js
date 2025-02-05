@@ -53,7 +53,7 @@ function Home() {
       <Indicators 
       rsiValue={rsiValue} 
       macdValue={macdValue} 
-      bollingerBands={bollingerBands} 
+      bollingerBands={bollingerBands}
       timePeriod={timePeriod} 
       mode={mode}
       />

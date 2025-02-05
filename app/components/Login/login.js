@@ -5,15 +5,34 @@ function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const USER = process.env.NEXT_PUBLIC_LOGIN_USER0;
-  const PSWD = process.env.NEXT_PUBLIC_LOGIN_PASSWORD0;
+  const handleLogin = async () => {
+    setLoading(true);
+    setError('');
 
-  const handleLogin = () => {
-    if (username === USER && password === PSWD) {
-      setIsLoggedIn(true);
-    } else {
-      setError('Invalid credentials, please try again.');
+    try {
+      const response = await fetch('/backend/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error de autenticación');
+      }
+
+      if (data.success) {
+        setIsLoggedIn(true); // Actualiza el estado de autenticación
+      }
+    } catch (err) {
+      setError(err.message || 'Error al iniciar sesión');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,10 +67,13 @@ function Login({ setIsLoggedIn }) {
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <button
           onClick={handleLogin}
-          className="w-full bg-blue-500 text-white p-2 rounded flex items-center justify-center
-                     transition transform duration-300 hover:scale-105 hover:bg-blue-600"
+          disabled={loading}
+          className={`w-full bg-blue-500 text-white p-2 rounded flex items-center justify-center
+                     transition transform duration-300 ${
+                       !loading && 'hover:scale-105 hover:bg-blue-600'
+                     } ${loading && 'opacity-50 cursor-not-allowed'}`}
         >
-          <FaEthereum />
+          {loading ? 'Verificando...' : <FaEthereum />}
         </button>
       </div>
     </div>
