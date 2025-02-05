@@ -33,17 +33,20 @@ To run the project locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ViewMarket.git
-   cd ViewMarket
+   git clone https://github.com/njoaco/viewmarket.git
+   cd viewmarket
 
 2. Install dependencies:
    ```bash
     npm install
 
-3. Create a .env.local file in the root directory and add your user data:
+3. Create a .env.local file in the root directory and add your keys data:
     ```bash
-    NEXT_PUBLIC_LOGIN_USER0=your_username
-    NEXT_PUBLIC_LOGIN_PASSWORD0=your_password
+    LOGIN_USER0=your_username
+    LOGIN_PASSWORD0=your_password
+    NEXT_PUBLIC_CRYPTO_DATA=your_cryptocompare_data_key
+    TWELVE_DATA_KEY=your_twelve_data_key
+    OPENAI_API_KEY=your_openai_api_key
     
 4. Start the development server:
      ```bash
