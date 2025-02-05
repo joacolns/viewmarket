@@ -14,8 +14,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const assetLabel = asset && asset.trim() !== '' ? asset : 'Símbolo no disponible';
 
   const getAIAnalysis = async (options = {}) => {
-    // options puede incluir predictionMode, actionQuery o holdQuery
-    setAnalysis(''); // Limpia análisis previo
+    setAnalysis('');
     setIsLoading(true);
     try {
       const response = await fetch('../../backend/api/ai-analysis', {
@@ -49,7 +48,6 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
     setIsLoading(false);
   };
 
-  // Llamada automática cuando se abre el panel para el análisis general
   useEffect(() => {
     if (isOpen) {
       getAIAnalysis();
@@ -83,7 +81,6 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
               </div>
             </div>
           ) : (
-            // Se agrega un contenedor con altura máxima y scroll vertical
             <div className="max-h-60 overflow-y-auto">
               <p className="animate-fade-in" style={{ color: 'var(--card-text)' }}>
                 {analysis}
@@ -95,7 +92,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
             onClick={() => getAIAnalysis({ predictionMode: true })} 
              className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
           >
-            ¿Cuánto costaría a final de este mes?
+            ¿Cual será el precio a final de este mes?
           </button>
 
           <button 

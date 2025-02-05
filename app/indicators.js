@@ -9,7 +9,6 @@ export const calculateRSI = (prices, period = 14) => {
   let avgLoss = 0;
   const rsi = [];
 
-  // Inicializa el primer promedio usando los primeros "period" cambios
   for (let i = 1; i <= period; i++) {
     const diff = prices[i] - prices[i - 1];
     if (diff >= 0) {
@@ -24,7 +23,6 @@ export const calculateRSI = (prices, period = 14) => {
   let rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
   rsi.push(100 - (100 / (1 + rs)));
 
-  // Calcular RSI para el resto de los precios usando el suavizado exponencial
   for (let i = period + 1; i < prices.length; i++) {
     const diff = prices[i] - prices[i - 1];
     const gain = diff > 0 ? diff : 0;
@@ -39,7 +37,6 @@ export const calculateRSI = (prices, period = 14) => {
 };
 
 
-// Función para calcular el MACD (Moving Average Convergence Divergence)
 export const calculateMACD = (prices, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) => {
   const fastEMA = calculateEMA(prices, fastPeriod);
   const slowEMA = calculateEMA(prices, slowPeriod);
@@ -49,7 +46,6 @@ export const calculateMACD = (prices, fastPeriod = 12, slowPeriod = 26, signalPe
 };
 
 
-// Función para calcular el EMA (Exponential Moving Average)
 export const calculateEMA = (prices, period) => {
   const k = 2 / (period + 1);
   const ema = [prices[0]];
@@ -73,7 +69,6 @@ export const calculateBollingerBands = (prices, period = 20, multiplier = 2) => 
   const middleBand = [];
   const lowerBand = [];
   
-  // Inicializamos con la suma y suma de cuadrados del primer período
   let sum = 0;
   let sumSq = 0;
   for (let i = 0; i < period; i++) {
@@ -90,7 +85,6 @@ export const calculateBollingerBands = (prices, period = 20, multiplier = 2) => 
     upperBand.push(sma + multiplier * stdDev);
     lowerBand.push(sma - multiplier * stdDev);
     
-    // Si aún quedan datos, actualizamos las sumas para la siguiente ventana
     if (i < prices.length) {
       sum = sum - prices[i - period] + prices[i];
       sumSq = sumSq - prices[i - period] * prices[i - period] + prices[i] * prices[i];
@@ -102,11 +96,9 @@ export const calculateBollingerBands = (prices, period = 20, multiplier = 2) => 
 
 
 export const evaluatePrediction = (rsi, macd, signalLine, upperBand, lowerBand, price) => {
-  // Definir umbrales configurables
   const oversold = 30, overbought = 70;
   const extremeOversold = 20, extremeOverbought = 80;
   
-  // Inicialmente, se sugiere "Hold"
   let prediction = 'Hold';
 
   const latestMACD = macd[macd.length - 1];
@@ -114,16 +106,12 @@ export const evaluatePrediction = (rsi, macd, signalLine, upperBand, lowerBand, 
   const latestUpper = upperBand[upperBand.length - 1];
   const latestLower = lowerBand[lowerBand.length - 1];
 
-  // Condiciones de compra
   if (rsi < oversold && latestMACD > latestSignal && price < latestLower) {
     prediction = 'Buy';
   }
-  // Condiciones de venta
   else if (rsi > overbought && latestMACD < latestSignal && price > latestUpper) {
     prediction = 'Sell';
   }
-  
-  // Ajustes adicionales para condiciones extremas
   if (rsi > extremeOverbought && price >= latestUpper) {
     prediction = 'Sell or Wait for Correction';
   }

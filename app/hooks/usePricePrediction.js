@@ -13,12 +13,10 @@ const usePricePrediction = (chartData, timePeriod) => {
         return;
       }
 
-      // Extraemos la ventana de precios del período deseado.
       const startIndex = chartData.length - timePeriod - 1;
       const endIndex = chartData.length - 1;
       const periodPrices = chartData.slice(startIndex, endIndex + 1);
 
-      // Calculamos los indicadores técnicos.
       const rsi = calculateRSI(periodPrices);
       const { macd, signalLine } = calculateMACD(periodPrices);
       const { upperBand, lowerBand } = calculateBollingerBands(periodPrices);
@@ -30,7 +28,6 @@ const usePricePrediction = (chartData, timePeriod) => {
       let trendPrediction = 'No clear trend - Hold';
       let style = {};
 
-      // Análisis basado en RSI.
       if (rsi[rsi.length - 1] < 30) {
         if (macd[macd.length - 1] > signalLine[signalLine.length - 1] && currentPrice < lowerBand[lowerBand.length - 1]) {
           trendPrediction = `Strong potential for price increase in ${timePeriod} days - Consider buying soon.`;
@@ -48,7 +45,6 @@ const usePricePrediction = (chartData, timePeriod) => {
           style = { color: 'orange', icon: '↘' };
         }
       } else {
-        // Análisis basado en el cruce del MACD.
         if (macd[macd.length - 1] > signalLine[signalLine.length - 1]) {
           trendPrediction = `Potential bullish crossover detected - Possible price increase.`;
           style = { color: 'green', icon: '⬆' };
@@ -58,7 +54,6 @@ const usePricePrediction = (chartData, timePeriod) => {
         }
       }
 
-      // Análisis basado en las Bandas de Bollinger.
       if (currentPrice > upperBand[upperBand.length - 1] && rsi[rsi.length - 1] > 70) {
         trendPrediction = `Overbought conditions, expect price to pull back - Profit-taking.`;
         style = { color: 'red', icon: '⇊' };
@@ -67,7 +62,6 @@ const usePricePrediction = (chartData, timePeriod) => {
         style = { color: 'green', icon: '⇈' };
       }
 
-      // Análisis de cambio porcentual del precio.
       if (priceChange > 0) {
         trendPrediction += ` Price has increased ${percentChange.toFixed(2)}% in the last ${timePeriod} days.`;
       } else if (priceChange < 0) {
