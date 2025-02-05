@@ -3,6 +3,7 @@ dotenv.config({ path: './credentials.env' });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['arima'],
   images: {
     domains: ['cryptocompare.com', 'logo.clearbit.com'],
   },

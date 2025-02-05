@@ -16,7 +16,6 @@ import SocialIcons from './components/SocialIcons';
 import AIAssistant from './components/AI/AIAssistant';
 import ThemeToggle from './components/Themes/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
-import PricePredictionML from './components/PricePredictionML/PricePredictionML';
 
 function Home() {
   const [mode, setMode] = useState('crypto');
@@ -52,11 +51,11 @@ function Home() {
       <TimePeriodInput timePeriod={timePeriod} setTimePeriod={setTimePeriod} />
 
       <Indicators 
-        rsiValue={rsiValue} 
-        macdValue={macdValue} 
-        bollingerBands={bollingerBands}
-        timePeriod={timePeriod} 
-        mode={mode}
+      rsiValue={rsiValue} 
+      macdValue={macdValue} 
+      bollingerBands={bollingerBands}
+      timePeriod={timePeriod} 
+      mode={mode}
       />
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
@@ -72,8 +71,6 @@ function Home() {
         )}
       </div>
 
-      {<PricePredictionML chartData={chartData} futureDays={30} /> }
-    
       <AIAssistant 
         asset={mode === 'crypto' ? crypto : stock}
         mode={mode}
@@ -83,6 +80,7 @@ function Home() {
       />
 
       <ThemeToggle />
+
       <SocialIcons />
     </div>
   );
