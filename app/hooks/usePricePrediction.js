@@ -13,68 +13,69 @@ const usePricePrediction = (chartData, timePeriod) => {
         return;
       }
 
+      // Extraemos la ventana de precios del período deseado.
       const startIndex = chartData.length - timePeriod - 1;
       const endIndex = chartData.length - 1;
       const periodPrices = chartData.slice(startIndex, endIndex + 1);
-      
+
+      // Calculamos los indicadores técnicos.
       const rsi = calculateRSI(periodPrices);
       const { macd, signalLine } = calculateMACD(periodPrices);
       const { upperBand, lowerBand } = calculateBollingerBands(periodPrices);
-      
+
       const currentPrice = periodPrices[periodPrices.length - 1];
       const priceChange = currentPrice - periodPrices[0];
       const percentChange = (priceChange / periodPrices[0]) * 100;
 
       let trendPrediction = 'No clear trend - Hold';
-      let priceChangePrediction = '';
-      let predictionStyle = {};
+      let style = {};
 
-      // RSI Analysis
+      // Análisis basado en RSI.
       if (rsi[rsi.length - 1] < 30) {
         if (macd[macd.length - 1] > signalLine[signalLine.length - 1] && currentPrice < lowerBand[lowerBand.length - 1]) {
           trendPrediction = `Strong potential for price increase in ${timePeriod} days - Consider buying soon.`;
-          predictionStyle = { color: 'green', icon: '↑' };
+          style = { color: 'green', icon: '↑' };
         } else {
           trendPrediction = `RSI indicates potential rebound - Watch for confirmation signals.`;
-          predictionStyle = { color: 'grey', icon: '↗' };
+          style = { color: 'grey', icon: '↗' };
         }
       } else if (rsi[rsi.length - 1] > 70) {
         if (macd[macd.length - 1] < signalLine[signalLine.length - 1] && currentPrice > upperBand[upperBand.length - 1]) {
           trendPrediction = `Strong potential for price decrease in ${timePeriod} days - Consider selling or shorting.`;
-          predictionStyle = { color: 'red', icon: '↓' };
+          style = { color: 'red', icon: '↓' };
         } else {
           trendPrediction = `RSI suggests possible correction - Monitor for sell signals.`;
-          predictionStyle = { color: 'orange', icon: '↘' };
+          style = { color: 'orange', icon: '↘' };
         }
       } else {
-        // MACD Cross
+        // Análisis basado en el cruce del MACD.
         if (macd[macd.length - 1] > signalLine[signalLine.length - 1]) {
           trendPrediction = `Potential bullish crossover detected - Possible price increase.`;
-          predictionStyle = { color: 'green', icon: '⬆' };
+          style = { color: 'green', icon: '⬆' };
         } else if (macd[macd.length - 1] < signalLine[signalLine.length - 1]) {
           trendPrediction = `Bearish crossover detected - Possible price decrease.`;
-          predictionStyle = { color: 'red', icon: '⬇' };
+          style = { color: 'red', icon: '⬇' };
         }
       }
 
-      // Bollinger Bands Analysis
+      // Análisis basado en las Bandas de Bollinger.
       if (currentPrice > upperBand[upperBand.length - 1] && rsi[rsi.length - 1] > 70) {
         trendPrediction = `Overbought conditions, expect price to pull back - Profit-taking.`;
-        predictionStyle = { color: 'red', icon: '⇊' };
+        style = { color: 'red', icon: '⇊' };
       } else if (currentPrice < lowerBand[lowerBand.length - 1] && rsi[rsi.length - 1] < 30) {
         trendPrediction = `Oversold conditions, expect price to bounce back - Buy.`;
-        predictionStyle = { color: 'green', icon: '⇈' };
+        style = { color: 'green', icon: '⇈' };
       }
 
-      // Price Change Analysis
+      // Análisis de cambio porcentual del precio.
       if (priceChange > 0) {
         trendPrediction += ` Price has increased ${percentChange.toFixed(2)}% in the last ${timePeriod} days.`;
       } else if (priceChange < 0) {
         trendPrediction += ` Price has decreased ${Math.abs(percentChange).toFixed(2)}% in the last ${timePeriod} days.`;
       }
 
-      setPrediction(`${trendPrediction}`);
-      setPredictionStyle(predictionStyle);
+      setPrediction(trendPrediction);
+      setPredictionStyle(style);
     };
 
     makeTrendPrediction();
