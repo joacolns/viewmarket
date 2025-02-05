@@ -7,19 +7,30 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Modo:", mode, "Activo:", asset); // Debug para verificar valores correctos
+    console.log("Modo:", mode, "Activo:", asset);
   }, [mode, asset]);
 
   const assetType = mode;
   const assetLabel = asset && asset.trim() !== '' ? asset : 'Símbolo no disponible';
 
-  const getAIAnalysis = async () => {
+  const getAIAnalysis = async (options = {}) => {
+    // options puede incluir predictionMode, actionQuery o holdQuery
+    setAnalysis(''); // Limpia análisis previo
     setIsLoading(true);
     try {
       const response = await fetch('../../backend/api/ai-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ asset: assetLabel, mode, price, indicators, change24h })
+        body: JSON.stringify({ 
+          asset: assetLabel, 
+          mode, 
+          price, 
+          indicators, 
+          change24h, 
+          predictionMode: options.predictionMode || false,
+          actionQuery: options.actionQuery || false,
+          holdQuery: options.holdQuery || false
+        })
       });
 
       const contentType = response.headers.get('content-type');
@@ -38,6 +49,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
     setIsLoading(false);
   };
 
+  // Llamada automática cuando se abre el panel para el análisis general
   useEffect(() => {
     if (isOpen) {
       getAIAnalysis();
@@ -55,7 +67,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
 
       {isOpen && (
         <div
-          className={`absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in`}
+          className="absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in"
           style={{
             backgroundColor: 'var(--card-bg)',
             color: 'var(--card-text)',
@@ -69,18 +81,35 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
               <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}>
                 Generando análisis...
               </div>
-              <div className="h-4 rounded w-1/2" style={{ backgroundColor: 'var(--secondary)' }}></div>
             </div>
           ) : (
-            <div className="text-sm space-y-2">
+            <div className="max-h-60 overflow-y-auto">
               <p className="animate-fade-in" style={{ color: 'var(--card-text)' }}>
                 {analysis}
               </p>
-              <div className="mt-4 text-xs" style={{ color: 'var(--secondary)' }}>
-                * Análisis generado por IA
-              </div>
             </div>
           )}
+
+          <button 
+            onClick={() => getAIAnalysis({ predictionMode: true })} 
+             className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
+          >
+            ¿Cuánto costaría a final de este mes?
+          </button>
+
+          <button 
+            onClick={() => getAIAnalysis({ actionQuery: true })} 
+           className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
+          >
+            ¿Compro o vendo?
+          </button>
+
+          <button 
+            onClick={() => getAIAnalysis({ holdQuery: true })} 
+           className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
+          >
+            ¿Mantengo?
+          </button>
         </div>
       )}
     </div>
