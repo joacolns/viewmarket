@@ -4,7 +4,9 @@
 
 @font-face {
   font-family: 'Myriad';
-  src: url('./fonts/SFUIText-Regular.otf') format('opentype');
+  src: url('./fonts/SFUIText-Regular.woff') format('woff'),
+       url('./fonts/SFUIText-Regular.ttf') format('truetype'),
+       url('./fonts/SFUIText-Regular.otf') format('opentype');
 }
 
 :root {

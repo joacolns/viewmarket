@@ -54,7 +54,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
     }
   }, [asset, mode, isOpen]);
 
-  return (
+   return (
     <div className="fixed bottom-4 right-4 z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -170,4 +170,5 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
     </div>
   );
 };
+
 export default AIAssistant;
