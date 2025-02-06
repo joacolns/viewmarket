@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { calculateRSI, calculateMACD, calculateBollingerBands } from '../indicators';
+import { calculateRSI, calculateMACD, calculateBollingerBands } from '../backend/references/indicators';
 
 const usePricePrediction = (chartData, timePeriod) => {
   const [prediction, setPrediction] = useState('');

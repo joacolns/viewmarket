@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { calculateRSI, calculateMACD, calculateBollingerBands } from '../indicators';
+import { calculateRSI, calculateMACD, calculateBollingerBands } from '../backend/references/indicators';
 
 const useStockData = (stock, timePeriod) => {
   const [data, setData] = useState({
