@@ -65,14 +65,32 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
 
       {isOpen && (
         <div
-          className="absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in"
+          className="absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in
+                     max-h-[60vh] overflow-y-auto
+                     /* Estilos específicos para móviles en horizontal */
+                     @media (max-width: 767px) and (orientation: landscape): {
+                       position: fixed;
+                       bottom: 1rem;
+                       left: 50%;
+                       transform: translateX(-50%);
+                       width: 95vw;
+                       max-width: 95vw;
+                       max-height: 80vh;
+                       padding: 0.75rem;
+                     }"
           style={{
             backgroundColor: 'var(--card-bg)',
             color: 'var(--card-text)',
             borderColor: 'var(--secondary)',
           }}
         >
-          <h3 className="text-lg font-bold mb-4">Análisis de {assetLabel}</h3>
+          <h3 className="text-lg font-bold mb-4 
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           font-size: 0.875rem;
+                           margin-bottom: 0.5rem;
+                         }">
+            Análisis de {assetLabel}
+          </h3>
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">
@@ -81,40 +99,75 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
               </div>
             </div>
           ) : (
-            <div className="max-h-60 overflow-y-auto">
-              <p className="animate-fade-in" style={{ color: 'var(--card-text)' }}>
+            <div className="max-h-[50vh] overflow-y-auto
+                           @media (max-width: 767px) and (orientation: landscape): {
+                             max-height: 65vh;
+                           }">
+              <p className="animate-fade-in text-sm
+                           @media (max-width: 767px) and (orientation: landscape): {
+                             font-size: 0.75rem;
+                           }" 
+                 style={{ color: 'var(--card-text)' }}>
                 {analysis}
               </p>
             </div>
           )}
 
-          <button 
-            onClick={() => getAIAnalysis({ predictionMode: true })} 
-             className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
-          >
-            ¿Cual será el precio a final de este mes?
-          </button>
+          <div className="mt-3 space-y-2
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           display: grid;
+                           grid-template-columns: repeat(2, 1fr);
+                           gap: 0.5rem;
+                           margin-top: 0.5rem;
+                         }">
+            <button 
+              onClick={() => getAIAnalysis({ predictionMode: true })} 
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           font-size: 0.65rem;
+                           padding: 0.35rem;
+                           line-height: 1.2;
+                         }"
+            >
+              ¿Cual será el precio a final de este mes?
+            </button>
 
-          <button 
-            onClick={() => getAIAnalysis({ actionQuery: true })} 
-             className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
-          >
-            ¿Compro o vendo?
-          </button>
+            <button 
+              onClick={() => getAIAnalysis({ actionQuery: true })} 
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           font-size: 0.65rem;
+                           padding: 0.35rem;
+                           line-height: 1.2;
+                         }"
+            >
+              ¿Compro o vendo?
+            </button>
 
-          <button 
-            onClick={() => getAIAnalysis({ holdQuery: true })} 
-            className="w-full bg-blue-600 text-white p-2 rounded-xl mt-3 transition-transform transform hover:scale-105 hover:bg-blue-700"
-          >
-            ¿Mantengo?
-          </button>
-          <div className="mt-4 text-xs" style={{ color: 'var(--secondary)' }}>
-                * Análisis generado por IA
+            <button 
+              onClick={() => getAIAnalysis({ holdQuery: true })} 
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           font-size: 0.65rem;
+                           padding: 0.35rem;
+                           grid-column: span 2;
+                         }"
+            >
+              ¿Mantengo?
+            </button>
+          </div>
+          
+          <div className="mt-4 text-xs
+                         @media (max-width: 767px) and (orientation: landscape): {
+                           font-size: 0.6rem;
+                           margin-top: 0.5rem;
+                         }" 
+               style={{ color: 'var(--secondary)' }}>
+            * Análisis generado por IA
           </div>
         </div>
       )}
     </div>
   );
 };
-
 export default AIAssistant;
