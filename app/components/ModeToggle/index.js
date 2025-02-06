@@ -28,18 +28,18 @@ const ModeToggle = ({ mode, setMode }) => {
       aria-label="Cambiar modo"
     >
       {mode === 'crypto' ? (
-        <FaChartLine className="text-white text-xl transition-transform duration-300" />
+        <FaChartLine
+          className={`text-white text-xl transition-transform  duration-300 ${
+            isClicked ? 'scale-125 rotate-45 opacity-70' : 'scale-100 rotate-0 opacity-100'
+          }`}
+        />
       ) : (
-        <FaBitcoin className="text-white text-xl transition-transform duration-300" />
+        <FaBitcoin
+          className={`text-white text-xl transition-transform  duration-300 ${
+            isClicked ? 'scale-125 rotate-45 opacity-70' : 'scale-100 rotate-0 opacity-100'
+          }`}
+        />
       )}
-      
-      <div
-        className={`absolute inset-0 flex justify-center items-center
-          ${isClicked ? 'opacity-100' : 'opacity-0'}
-          transition-opacity duration-300`}
-      >
-        <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></div>
-      </div>
     </button>
   );
 };
