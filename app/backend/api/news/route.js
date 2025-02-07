@@ -5,7 +5,7 @@ export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('query') || 'cryptocurrency';
-    const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
+    const apiKey = process.env.NEWSAPI_KEY;
     
     const url = `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&apiKey=${apiKey}`;
     
