@@ -20,7 +20,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
       {/* Ventana desplegable de noticias */}
       {isOpen && (
         <div
-          className="absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in max-h-[60vh] overflow-y-auto"
+          className="absolute bottom-20 right-0 w-80 rounded-xl shadow-2xl p-4 border animate-slide-up-fade-in max-h-[60vh] overflow-y-auto"
           style={{
             backgroundColor: 'var(--card-bg)',
             color: 'var(--card-text)',
