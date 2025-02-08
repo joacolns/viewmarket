@@ -92,7 +92,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             {
               label: 'EMA 20',
               data: ema20,
-              borderColor: 'rgb(44, 121, 132)',
+              borderColor: 'rgb(255, 205, 86)',
               borderWidth: 2,
               tension: 0.1,
               pointRadius: isMobile ? 0 : 1,
