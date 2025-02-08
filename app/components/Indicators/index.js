@@ -90,23 +90,19 @@ const StockPriceRow = ({ stock, data }) => {
   );
 };
 
-const Indicators = ({ rsiValue, macdValue, bollingerBands, timePeriod, mode }) => {
-  // Si no se recibe mode, se asume por defecto 'crypto'
+const Indicators = ({ rsiValue, macdValue, bollingerBands, emaValue, timePeriod, mode }) => {
   const currentMode = mode || 'crypto';
 
-  // Hooks para criptomonedas
   const btcData = useCryptoData('BTC', timePeriod);
   const ethData = useCryptoData('ETH', timePeriod);
   const bnbData = useCryptoData('BNB', timePeriod);
 
-  // Hooks para acciones
   const tslaData = useStockData('TSLA', timePeriod);
   const nvdaData = useStockData('NVDA', timePeriod);
   const aaplData = useStockData('AAPL', timePeriod);
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      {/* Contenedor de indicadores técnicos */}
       <div
         className="w-full md:w-2/3 rounded-3xl p-4"
         style={{
@@ -114,15 +110,15 @@ const Indicators = ({ rsiValue, macdValue, bollingerBands, timePeriod, mode }) =
           color: 'var(--card-text)',
         }}
       >
-        <div className="space-y-1">
+        <div className="space-y-0">
           <p>RSI Value: {rsiValue?.toFixed(2) || 'Loading...'}</p>
           <p>MACD Value: {macdValue?.toFixed(2) || 'Loading...'}</p>
+          <p>EMA 20: {emaValue?.toFixed(2) || 'Loading...'}</p>
           <p>Upper Bollinger Band: {bollingerBands?.upperBand?.slice(-1)[0]?.toFixed(2) || 'Loading...'}</p>
           <p>Lower Bollinger Band: {bollingerBands?.lowerBand?.slice(-1)[0]?.toFixed(2) || 'Loading...'}</p>
         </div>
       </div>
 
-      {/* Contenedor de precios */}
       <div
         className="w-full md:w-1/3 rounded-3xl p-4"
         style={{

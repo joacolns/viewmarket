@@ -61,6 +61,7 @@ export async function POST(request) {
         Cambio 24h: ${requestData.change24h}%
         RSI: ${requestData.indicators.rsi}
         MACD: ${requestData.indicators.macd}
+        EMAs: ${requestData.indicators.ema}
         Bandas de Bollinger: 
           Superior: ${requestData.indicators.bb.upper}
           Media: ${requestData.indicators.bb.middle}

@@ -29,7 +29,7 @@ function Home() {
   const stockData = useStockData(mode === 'stocks' ? stock : null, timePeriod);
   const activeData = mode === 'crypto' ? cryptoData : stockData;
   const assetSymbol = mode === 'crypto' ? crypto : stock;
-  const { price, chartData, error, rsiValue, macdValue, bollingerBands } = activeData;
+  const { price, chartData, error, emaValue, rsiValue, macdValue, bollingerBands } = activeData;
   const { prediction, predictionStyle } = usePricePrediction(chartData, timePeriod);
   const chartHeight = useChartHeight(chartContainerRef);
   
@@ -55,6 +55,7 @@ function Home() {
       rsiValue={rsiValue} 
       macdValue={macdValue} 
       bollingerBands={bollingerBands}
+      emaValue={emaValue}
       timePeriod={timePeriod} 
       mode={mode}
       />
@@ -78,7 +79,7 @@ function Home() {
         asset={mode === 'crypto' ? crypto : stock}
         mode={mode}
         price={price}
-        indicators={{ rsi: rsiValue, macd: macdValue, bb: bollingerBands }}
+        indicators={{ rsi: rsiValue, macd: macdValue, ema: emaValue,bb: bollingerBands }}
         change24h={mode === 'crypto' ? priceChange24h : undefined}
       />
 

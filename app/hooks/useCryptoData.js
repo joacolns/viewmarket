@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { calculateRSI, calculateMACD, calculateBollingerBands } from '../backend/references/indicators';
+import { calculateRSI, calculateMACD, calculateBollingerBands, calculateEMA } from '../backend/references/indicators';
 
 const useCryptoData = (crypto, timePeriod) => {
   const [data, setData] = useState({
@@ -11,7 +11,8 @@ const useCryptoData = (crypto, timePeriod) => {
     error: null,
     rsiValue: null,
     macdValue: null,
-    bollingerBands: null
+    bollingerBands: null,
+    emaValue: null,
   });
 
   useEffect(() => {
@@ -38,7 +39,8 @@ const useCryptoData = (crypto, timePeriod) => {
         const indicators = {
           rsi: calculateRSI(prices),
           macd: calculateMACD(prices),
-          bb: calculateBollingerBands(prices)
+          bb: calculateBollingerBands(prices),
+          ema: calculateEMA(prices, 20),
         };
 
         setData({
@@ -49,7 +51,8 @@ const useCryptoData = (crypto, timePeriod) => {
           error: null,
           rsiValue: indicators.rsi.slice(-1)[0],
           macdValue: indicators.macd.macd.slice(-1)[0],
-          bollingerBands: indicators.bb
+          bollingerBands: indicators.bb,
+          emaValue: indicators.ema.slice(-1)[0],
         });
 
       } catch (error) {

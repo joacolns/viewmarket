@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { calculateEMA } from '../../backend/references/indicators';
 
 Chart.register(
   CategoryScale,
@@ -54,6 +55,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
   }, []);
 
   const bollingerBands = calculateBollingerBands(chartData);
+  const ema20 = calculateEMA(chartData, 20);
 
   return (
     <Line
@@ -72,7 +74,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
               }
             },
             tension: 0.1,
-            pointRadius: isMobile ? 0 : 3, // Oculta puntos en móvil
+            pointRadius: isMobile ? 0 : 3,
             pointHoverRadius: isMobile ? 6 : 6
           },
           {
@@ -84,6 +86,15 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             tension: 0.1,
             yAxisID: 'y1',
             pointRadius: isMobile ? 0 : 0,
+            pointHoverRadius: isMobile ? 6 : 6
+          },
+          {
+            label: 'EMA 20',
+            data: ema20,
+            borderColor: 'rgb(255, 205, 86)',
+            borderWidth: 2,
+            tension: 0.1,
+            pointRadius: isMobile ? 0 : 1,
             pointHoverRadius: isMobile ? 6 : 6
           },
           {

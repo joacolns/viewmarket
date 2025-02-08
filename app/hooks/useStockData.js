@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { calculateRSI, calculateMACD, calculateBollingerBands } from '../backend/references/indicators';
+import { calculateRSI, calculateMACD, calculateBollingerBands, calculateEMA } from '../backend/references/indicators';
 
 const useStockData = (stock, timePeriod) => {
   const [data, setData] = useState({
@@ -11,7 +11,8 @@ const useStockData = (stock, timePeriod) => {
     error: null,
     rsiValue: null,
     macdValue: null,
-    bollingerBands: null
+    bollingerBands: null,
+    emaValue: null,
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const useStockData = (stock, timePeriod) => {
         const indicators = {
           rsi: calculateRSI(chartData),
           macd: calculateMACD(chartData),
-          bb: calculateBollingerBands(chartData)
+          bb: calculateBollingerBands(chartData),
+          ema: calculateEMA(chartData, 20),
         };
 
         setData({
@@ -39,7 +41,8 @@ const useStockData = (stock, timePeriod) => {
           error: null,
           rsiValue: indicators.rsi.slice(-1)[0],
           macdValue: indicators.macd.macd.slice(-1)[0],
-          bollingerBands: indicators.bb
+          bollingerBands: indicators.bb,
+          emaValue: indicators.ema.slice(-1)[0],
         });
 
       } catch (error) {
