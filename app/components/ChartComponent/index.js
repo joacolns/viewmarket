@@ -58,8 +58,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
   const ema20 = calculateEMA(chartData, 20);
 
   return (
-    <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-
+    <div className="max-w-full mx-auto p-6 card shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <Line
         data={{
           labels: chartData.map((_, index) => index),
@@ -87,7 +86,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
               borderWidth: 4,
               tension: 0.1,
               yAxisID: 'y1',
-              pointRadius: isMobile ? 0 : 0,
+              pointRadius: 0,
               pointHoverRadius: isMobile ? 6 : 6
             },
             {
@@ -137,18 +136,18 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
             x: { display: false },
             y: {
               position: 'left',
-              beginAtZero: false
+              beginAtZero: false,
             },
             y1: {
               position: 'right',
               min: 0,
               max: 100,
-              grid: { drawOnChartArea: false }
+              grid: { drawOnChartArea: false },
             }
           },
           elements: {
             line: {
-              spanGaps: true
+              spanGaps: true,
             }
           }
         }}
