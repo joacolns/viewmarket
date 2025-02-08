@@ -26,6 +26,7 @@ Powered by **Next.js**
 - **Charting Library**: [Chart.js](https://www.chartjs.org/) is used to render interactive and visually appealing graphs.
 - **Cryptocurrency API**: Fetches real-time and historical market data from [CryptoCompare](https://www.cryptocompare.com/).
 - **Stocks API**: Fetches real-time and historical market data from [TwelveData](https://twelvedata.com/).
+- **News API**: Locate articles and breaking news headlines from news sources and blogs from [NewsAPI](https://newsapi.org/)
 
 ## Installation
 
@@ -62,7 +63,7 @@ To run the project locally, follow these steps:
 - [ ] Add support for additional time frames (e.g., 6 months, 1 year).
 - [X] Visual Themes.
 - [X] Add stocks.
-- [ ] Improve prediction accuracy with machine learning models.
+- [ ] Improve prediction accuracy with machine learning models. [[W.I.P]](https://github.com/njoaco/juno-model)
 
 ## License
 
@@ -71,106 +72,111 @@ This project is licensed under the [Strict Open Use License (SOUL)](https://gith
 ## Structure
   ```bash
   Directory structure:
-  └── njoaco-viewmarket/
-      ├── README.md
-      ├── LICENSE.md
-      ├── jsconfig.json
-      ├── next.config.mjs
-      ├── package.json
-      ├── postcss.config.mjs
-      ├── tailwind.config.js
-      ├── .eslintrc.json
-      ├── app/
-      │   ├── globals.css
-      │   ├── layout.js
-      │   ├── page.js
-      │   ├── page.module.css
-      │   ├── backend/
-      │   │   ├── api/
-      │   │   │   ├── ai-analysis/
-      │   │   │   │   └── route.js
-      │   │   │   ├── login/
-      │   │   │   │   └── route.js
-      │   │   │   └── stocks/
-      │   │   │       └── route.js
-      │   │   └── references/
-      │   │       └── indicators.js
-      │   ├── components/
-      │   │   ├── AI/
-      │   │   │   └── AIAssistant.js
-      │   │   ├── ChartComponent/
-      │   │   │   └── index.js
-      │   │   ├── CryptoInput/
-      │   │   │   └── index.js
-      │   │   ├── Indicators/
-      │   │   │   └── index.js
-      │   │   ├── Login/
-      │   │   │   └── login.js
-      │   │   ├── ModeToggle/
-      │   │   │   └── index.js
-      │   │   ├── PriceDisplay/
-      │   │   │   └── index.js
-      │   │   ├── SocialIcons/
-      │   │   │   └── index.js
-      │   │   ├── StockInput/
-      │   │   │   └── StockInput.js
-      │   │   ├── Themes/
-      │   │   │   └── ThemeToggle.js
-      │   │   └── TimePeriodInput/
-      │   │       └── index.js
-      │   ├── fonts/
-      │   │   ├── GeistMonoVF.woff
-      │   │   ├── GeistVF.woff
-      │   │   ├── MYRIADPRO-BOLD.OTF
-      │   │   ├── MYRIADPRO-BOLDCOND.OTF
-      │   │   ├── MYRIADPRO-BOLDCONDIT.OTF
-      │   │   ├── MYRIADPRO-BOLDIT.OTF
-      │   │   ├── MYRIADPRO-COND.OTF
-      │   │   ├── MYRIADPRO-CONDIT.OTF
-      │   │   ├── MYRIADPRO-REGULAR.OTF
-      │   │   ├── MYRIADPRO-SEMIBOLD.OTF
-      │   │   ├── MYRIADPRO-SEMIBOLDIT.OTF
-      │   │   ├── MyriadPro-Light.otf
-      │   │   ├── SF-Pro-Display-Black.otf
-      │   │   ├── SF-Pro-Display-BlackItalic.otf
-      │   │   ├── SF-Pro-Display-Bold.otf
-      │   │   ├── SF-Pro-Display-BoldItalic.otf
-      │   │   ├── SF-Pro-Display-Heavy.otf
-      │   │   ├── SF-Pro-Display-HeavyItalic.otf
-      │   │   ├── SF-Pro-Display-Light.otf
-      │   │   ├── SF-Pro-Display-LightItalic.otf
-      │   │   ├── SF-Pro-Display-Medium.otf
-      │   │   ├── SF-Pro-Display-MediumItalic.otf
-      │   │   ├── SF-Pro-Display-Regular.otf
-      │   │   ├── SF-Pro-Display-RegularItalic.otf
-      │   │   ├── SF-Pro-Display-Semibold.otf
-      │   │   ├── SF-Pro-Display-SemiboldItalic.otf
-      │   │   ├── SF-Pro-Display-Thin.otf
-      │   │   ├── SF-Pro-Display-ThinItalic.otf
-      │   │   ├── SF-Pro-Display-Ultralight.otf
-      │   │   ├── SF-Pro-Display-UltralightItalic.otf
-      │   │   ├── SF-Pro-Text-Bold.otf
-      │   │   ├── SF-Pro-Text-BoldItalic.otf
-      │   │   ├── SF-Pro-Text-Heavy.otf
-      │   │   ├── SF-Pro-Text-HeavyItalic.otf
-      │   │   ├── SF-Pro-Text-Light.otf
-      │   │   ├── SF-Pro-Text-LightItalic.otf
-      │   │   ├── SF-Pro-Text-Medium.otf
-      │   │   ├── SF-Pro-Text-MediumItalic.otf
-      │   │   ├── SF-Pro-Text-Regular.otf
-      │   │   ├── SF-Pro-Text-RegularItalic.otf
-      │   │   ├── SF-Pro-Text-Semibold.otf
-      │   │   ├── SF-Pro-Text-SemiboldItalic.otf
-      │   │   ├── SFUIText-Regular.otf
-      │   │   ├── SFUIText-Regular.ttf
-      │   │   └── SFUIText-Regular.woff
-      │   └── hooks/
-      │       ├── useChartHeight.js
-      │       ├── useCryptoData.js
-      │       ├── usePricePrediction.js
-      │       └── useStockData.js
-      ├── assets/
-      │   ├── FontsFree-Net-MyriadPro-Light.ttf
-      │   ├── icon.psd
-      │   └── logo.psd
-      └── public/
+└── njoaco-viewmarket/
+    ├── README.md
+    ├── LICENSE.md
+    ├── jsconfig.json
+    ├── next.config.mjs
+    ├── package.json
+    ├── postcss.config.mjs
+    ├── tailwind.config.js
+    ├── .eslintrc.json
+    ├── app/
+    │   ├── globals.css
+    │   ├── layout.js
+    │   ├── page.js
+    │   ├── page.module.css
+    │   ├── backend/
+    │   │   ├── api/
+    │   │   │   ├── ai-analysis/
+    │   │   │   │   └── route.js
+    │   │   │   ├── login/
+    │   │   │   │   └── route.js
+    │   │   │   ├── news/
+    │   │   │   │   └── route.js
+    │   │   │   └── stocks/
+    │   │   │       └── route.js
+    │   │   └── references/
+    │   │       └── indicators.js
+    │   ├── components/
+    │   │   ├── AI/
+    │   │   │   └── AIAssistant.js
+    │   │   ├── ChartComponent/
+    │   │   │   └── index.js
+    │   │   ├── CryptoInput/
+    │   │   │   └── index.js
+    │   │   ├── Indicators/
+    │   │   │   └── index.js
+    │   │   ├── Login/
+    │   │   │   └── login.js
+    │   │   ├── ModeToggle/
+    │   │   │   └── index.js
+    │   │   ├── News/
+    │   │   │   └── NewsWindown.js
+    │   │   ├── PriceDisplay/
+    │   │   │   └── index.js
+    │   │   ├── SocialIcons/
+    │   │   │   └── index.js
+    │   │   ├── StockInput/
+    │   │   │   └── StockInput.js
+    │   │   ├── Themes/
+    │   │   │   └── ThemeToggle.js
+    │   │   └── TimePeriodInput/
+    │   │       └── index.js
+    │   ├── fonts/
+    │   │   ├── GeistMonoVF.woff
+    │   │   ├── GeistVF.woff
+    │   │   ├── MYRIADPRO-BOLD.OTF
+    │   │   ├── MYRIADPRO-BOLDCOND.OTF
+    │   │   ├── MYRIADPRO-BOLDCONDIT.OTF
+    │   │   ├── MYRIADPRO-BOLDIT.OTF
+    │   │   ├── MYRIADPRO-COND.OTF
+    │   │   ├── MYRIADPRO-CONDIT.OTF
+    │   │   ├── MYRIADPRO-REGULAR.OTF
+    │   │   ├── MYRIADPRO-SEMIBOLD.OTF
+    │   │   ├── MYRIADPRO-SEMIBOLDIT.OTF
+    │   │   ├── MyriadPro-Light.otf
+    │   │   ├── SF-Pro-Display-Black.otf
+    │   │   ├── SF-Pro-Display-BlackItalic.otf
+    │   │   ├── SF-Pro-Display-Bold.otf
+    │   │   ├── SF-Pro-Display-BoldItalic.otf
+    │   │   ├── SF-Pro-Display-Heavy.otf
+    │   │   ├── SF-Pro-Display-HeavyItalic.otf
+    │   │   ├── SF-Pro-Display-Light.otf
+    │   │   ├── SF-Pro-Display-LightItalic.otf
+    │   │   ├── SF-Pro-Display-Medium.otf
+    │   │   ├── SF-Pro-Display-MediumItalic.otf
+    │   │   ├── SF-Pro-Display-Regular.otf
+    │   │   ├── SF-Pro-Display-RegularItalic.otf
+    │   │   ├── SF-Pro-Display-Semibold.otf
+    │   │   ├── SF-Pro-Display-SemiboldItalic.otf
+    │   │   ├── SF-Pro-Display-Thin.otf
+    │   │   ├── SF-Pro-Display-ThinItalic.otf
+    │   │   ├── SF-Pro-Display-Ultralight.otf
+    │   │   ├── SF-Pro-Display-UltralightItalic.otf
+    │   │   ├── SF-Pro-Text-Bold.otf
+    │   │   ├── SF-Pro-Text-BoldItalic.otf
+    │   │   ├── SF-Pro-Text-Heavy.otf
+    │   │   ├── SF-Pro-Text-HeavyItalic.otf
+    │   │   ├── SF-Pro-Text-Light.otf
+    │   │   ├── SF-Pro-Text-LightItalic.otf
+    │   │   ├── SF-Pro-Text-Medium.otf
+    │   │   ├── SF-Pro-Text-MediumItalic.otf
+    │   │   ├── SF-Pro-Text-Regular.otf
+    │   │   ├── SF-Pro-Text-RegularItalic.otf
+    │   │   ├── SF-Pro-Text-Semibold.otf
+    │   │   ├── SF-Pro-Text-SemiboldItalic.otf
+    │   │   ├── SFUIText-Regular.otf
+    │   │   ├── SFUIText-Regular.ttf
+    │   │   └── SFUIText-Regular.woff
+    │   └── hooks/
+    │       ├── useChartHeight.js
+    │       ├── useCryptoData.js
+    │       ├── useNews.js
+    │       ├── usePricePrediction.js
+    │       └── useStockData.js
+    ├── assets/
+    │   ├── FontsFree-Net-MyriadPro-Light.ttf
+    │   ├── icon.psd
+    │   └── logo.psd
+    └── public/

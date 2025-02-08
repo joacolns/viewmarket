@@ -40,8 +40,6 @@ function Home() {
       <ModeToggle mode={mode} setMode={setMode} />
       <ThemeToggle />
 
-      
-
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
         {mode === 'crypto' ? (
           <CryptoInput crypto={crypto} setCrypto={setCrypto} clearStock={() => setStock('')} />
@@ -60,8 +58,6 @@ function Home() {
       timePeriod={timePeriod} 
       mode={mode}
       />
-
-
 
       <div ref={chartContainerRef} className="chart w-full" style={{ height: chartHeight }}>
         {error && <p className="text-red-500">We couldn&apos;t load the &apos;{assetSymbol}&apos; data</p>}
