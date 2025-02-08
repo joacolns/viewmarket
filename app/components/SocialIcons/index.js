@@ -1,4 +1,4 @@
-import { FaGithub, FaChartBar } from 'react-icons/fa';
+import { FaGithub, FaCoins, FaViacoin } from 'react-icons/fa';
 import Link from 'next/link';
 
 const SocialIcons = () => {
@@ -11,7 +11,7 @@ const SocialIcons = () => {
         />
       </Link>
       <Link href="https://www.coinmarketcap.com" target="_blank">
-        <FaChartBar
+        <FaCoins
           size={30}
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
