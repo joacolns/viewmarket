@@ -6,24 +6,24 @@ const SocialIcons = () => {
     <div className="icons flex justify-center space-x-8 scroll-mt-7">
       <Link href="https://github.com/njoaco/viewmarket-crypto" target="_blank">
         <FaGithub
-          size={30}
+          size={25}
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
       </Link>
       <Link href="https://www.coinmarketcap.com" target="_blank">
         <FaCoins
-          size={30}
+          size={25}
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
       </Link>
       <Link href="https://github.com/njoaco/juno-model" target="_blank">
         <FaViacoin
-          size={30}
+          size={25}
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
       </Link>
       <div
-        className="version text-s rounded-full px-2 py-1"
+        className="version text-xs rounded-full px-2 py-1"
         style={{
           backgroundColor: 'var(--card-bg)',
           color: 'var(--card-text)',
