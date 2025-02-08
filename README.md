@@ -57,7 +57,7 @@ To run the project locally, follow these steps:
 
 ## Roadmap
 
-- [ ] Add more technical indicators (e.g., EMA, Stochastic Oscillator).
+- [ ] Add more technical indicators (e.g., <s>EMA</s> , Stochastic Oscillator).
 - [X] Integrate news updates for selected cryptocurrencies.
 - [X] AI Assistant (GPT-4o mini).
 - [ ] Add support for additional time frames (e.g., 6 months, 1 year).
