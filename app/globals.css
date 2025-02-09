@@ -65,7 +65,7 @@ body::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 50.2%;
+  left: 50%;
   transform: translateX(-50%);
   background-image: url('../assets/logo.png');
   background-size: contain;
@@ -79,16 +79,15 @@ body::before {
 
 @media (max-width: 768px) {
   body::before {
-    width: 280px;
-    height: 280px;
+    width: 270px;
+    height: 270px;
+
   }
 }
-
 
 [data-theme="dark"] body::before {
   filter: invert(1);
 }
-
 
 /* Contenedor principal */
 .container {
