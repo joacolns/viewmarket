@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const SocialIcons = () => {
   return (
-    <div className="icons flex justify-center space-x-8 scroll-mt-7">
+    <div className="icons flex justify-center space-x-8 scroll-mt-7 mt-2">
       <Link href="https://github.com/njoaco/viewmarket-crypto" target="_blank">
         <FaGithub
           size={25}

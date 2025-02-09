@@ -122,7 +122,7 @@ const ChartComponent = ({ crypto, chartData, rsiValue, macdValue }) => {
         options={{
           responsive: true,
           plugins: {
-            legend: { display: true },
+            legend: { display: !isMobile }, // Oculta la leyenda en móviles
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
