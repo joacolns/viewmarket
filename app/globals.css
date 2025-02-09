@@ -1,60 +1,70 @@
-/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Myriad';
+  src: url('./fonts/SFUIText-Regular.woff') format('woff'),
+       url('./fonts/SFUIText-Regular.ttf') format('truetype'),
+       url('./fonts/SFUIText-Regular.otf') format('opentype');
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffffff; /* Fondo claro */
+  --foreground: #171717; /* Texto claro */
+  --card-bg: #f1f0f0; /* Fondo de tarjetas (claro) */
+  --card-text: #374151; /* Texto de tarjetas (claro) */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="dark"] {
+  --background: #131a1b; /* Fondo oscuro */
+  --foreground: #ededed; /* Texto oscuro */
+  --card-bg: #202a2c; /* Fondo de tarjetas (oscuro) */
+  --card-text: #f3f4f6; /* Texto de tarjetas (oscuro) */
 }
 
-@media (max-width: 768px) {
-  body::before {
-    width: 200px; /* Ajustar el tamaño del logo en móviles */
-    height: 200px;
-  }
-  
+html, body {
+  height: 100%; /* Asegura que el html y el body ocupen toda la altura */
+  margin: 0; /* Elimina los márgenes por defecto */
+  padding: 0; /* Elimina los paddings por defecto */
 }
 
-@media (max-width: 768px) {
-  .container {
-    margin-top: 20px; /* Reduce el margen en móviles */
-  }
+body, .container, .chart, .inputField, .price, .rsiValue, .text-red-500, .version {
+  font-family: 'Myriad', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
-
+/* Animaciones y estilos existentes */
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Helvetica, sans-serif;
   background-color: var(--background);
-  height: 90%;
   color: var(--foreground);
-  margin: 0;
-  position: relative;
-  padding-top: 250px;
-  animation: fadeIn 1s ease-in-out; /* Se aplica el fade-in a la carga */
+}
+
+body.logged-in {
+  padding-top: 220px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  animation: fade-in 0.5s ease-in;
+  color: var(--card-text);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Estilo para el logo */
 body::before {
   content: '';
-  position: absolute; /* Cambiado de fixed a absolute */
-  top: 0; /* Sigue comenzando desde la parte superior */
+  position: absolute;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
   background-image: url('../assets/logo.png');
@@ -62,25 +72,38 @@ body::before {
   background-repeat: no-repeat;
   width: 350px;
   height: 350px;
+  z-index: -1;
+  transition: filter 0.3s ease;
+  filter: invert(0);
 }
+
+@media (max-width: 768px) {
+  body::before {
+    width: 270px;
+    height: 270px;
+
+  }
+}
+
+[data-theme="dark"] body::before {
+  filter: invert(1);
+}
+
 /* Contenedor principal */
 .container {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  margin-top: -150px; /* Ajusta el espacio según el tamaño del logo */
+  margin-top: -150px;
   padding: 20px;
 }
 
 /* Estilos para la caja de texto */
 .inputField {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 400px; /* Ajustar tamaño de la caja de texto */
-  font-size: 1rem;
-  margin-top: 20px; /* Separar de otros elementos */
+  background-color: var(--card-bg);
+  color: var(--card-text);
+  border: 1px solid var(--secondary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Estilos adicionales */
@@ -88,44 +111,55 @@ body::before {
   font-size: 1rem;
   padding-left: 2%;
   font-weight: regular;
-  color: #333;
+  color: var(--foreground);
 }
 
 .prediction-container {
   font-size: 1rem;
-  font-weight: normal; /* or 400 for regular */
-  color: #333;
-  display: inline-block; /* This ensures that padding affects only the content, not the width of the parent */
+  font-weight: normal;
+  color: var(--foreground);
+  display: inline-block;
 }
+
 .rsiValue {
   font-size: 1rem;
   margin-top: 10px;
+  color: var(--foreground);
 }
 
 .chart {
   margin-top: 20px;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .text-red-500 {
   color: #f56565;
 }
 
-.mb-4 {
-  margin-bottom: 1rem;
+/* Animaciones para el modo oscuro */
+@keyframes slide-up-fade-in {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-.flex {
-  display: flex;
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-slide-up-fade-in {
+  animation: slide-up-fade-in 0.3s ease-out;
 }
 
-.justify-between {
-  justify-content: space-between;
+.animate-fade-in {
+  animation: fade-in 0.5s ease-in;
 }
 
-.items-center {
-  align-items: center;
+.animate-pulse {
+  animation: pulse 2s infinite;
 }
 
-.p-4 {
-  padding: 16px;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

@@ -1,31 +1,29 @@
-/* page.module.css */
-
-/* Animación de fade-in para la entrada de los elementos */
 .container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  animation: fadeIn 1.5s ease-in-out; /* Animación para el contenedor */
+  animation: fadeIn 1.5s ease-in-out;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .chart {
-  width: 100%; /* Asegura que el gráfico ocupe todo el ancho disponible */
-  max-width: 1200px; /* Maximo ancho para evitar que se agrande demasiado en pantallas grandes */
-  margin: 0 auto; /* Centra el gráfico en la página */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-@media (max-width: 768px) {
-  .chart {
-    width: 100%;
-    padding: 10px; /* Añade algo de espacio para pantallas pequeñas */
-  }
-}
-
 
 .inputField, .price, .rsiValue, .chart, .text-red-500 {
   opacity: 0;
-  animation: fadeIn 2s ease-in-out forwards; /* Fade-in para cada elemento */
+  animation: fadeIn 2s ease-in-out forwards;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .version {
@@ -33,26 +31,9 @@
   bottom: 10px;
   right: 20px;
   font-size: 14px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+  color: var(--foreground);
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 5px;
   border-radius: 5px;
-}
-
-
-/* Incrementa la demora para el tiempo de aparición */
-.inputField {
-  animation-delay: 0.5s;
-}
-.price {
-  animation-delay: 1s;
-}
-.rsiValue {
-  animation-delay: 1.5s;
-}
-.chart {
-  animation-delay: 2s;
-}
-.text-red-500 {
-  animation-delay: 2.5s;
+  transition: color 0.3s ease;
 }
