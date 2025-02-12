@@ -1,0 +1,7 @@
+tensorflow
+pandas
+numpy
+scikit-learn
+cryptocompare
+pickle-mixin
+python-dotenv
