@@ -35,7 +35,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
             <p className="text-red-500 text-sm">{error}</p>
           )}
           {!loading && !error && (
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {news.slice(0, 5).map((article, index) => (
                 <li key={index} className="border-b pb-2 last:border-b-0">
                   <a
