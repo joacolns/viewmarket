@@ -16,7 +16,7 @@ const SocialIcons = () => {
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
       </Link>
-      <Link href="https://github.com/njoaco/juno-model" target="_blank">
+      <Link href="https://juno-web-production.up.railway.app/" target="_blank">
         <FaViacoin
           size={25}
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
@@ -29,7 +29,7 @@ const SocialIcons = () => {
           color: 'var(--card-text)',
         }}
       >
-        v1.1.0
+        v1.2.0
       </div>
     </div>
   );
