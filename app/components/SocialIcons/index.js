@@ -16,12 +16,6 @@ const SocialIcons = () => {
           className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
         />
       </Link>
-      <Link href="https://juno-web-production.up.railway.app/" target="_blank">
-        <FaViacoin
-          size={25}
-          className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
-        />
-      </Link>
       <div
         className="version text-xs rounded-full px-2 py-1"
         style={{

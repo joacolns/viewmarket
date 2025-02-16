@@ -7,7 +7,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
   const { news, loading, error } = useNews(query);
 
   return (
-    <div className="fixed bottom-20 right-4 z-50">
+    <div className="fixed bottom-36 right-4 z-50">
       {/* Botón para abrir/cerrar la ventana de noticias */}
       <button
         onClick={() => setIsOpen(!isOpen)}
