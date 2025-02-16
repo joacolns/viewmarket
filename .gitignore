@@ -22,6 +22,8 @@
 
 # production
 /build
+/backend/juno-c1/models/*
+/backend/juno-c1/predictions/*
 
 # misc
 .DS_Store

@@ -7,7 +7,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
   const { news, loading, error } = useNews(query);
 
   return (
-    <div className="fixed bottom-20 right-4 z-50">
+    <div className="fixed bottom-36 right-4 z-50">
       {/* Botón para abrir/cerrar la ventana de noticias */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -35,7 +35,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
             <p className="text-red-500 text-sm">{error}</p>
           )}
           {!loading && !error && (
-            <ul className="space-y-3">
+            <ul className="space-y-2">
               {news.slice(0, 5).map((article, index) => (
                 <li key={index} className="border-b pb-2 last:border-b-0">
                   <a

@@ -63,7 +63,7 @@ To run the project locally, follow these steps:
 - [ ] Add support for additional time frames (e.g., 6 months, 1 year).
 - [X] Visual Themes.
 - [X] Add stocks.
-- [ ] Improve prediction accuracy with machine learning models. [[W.I.P]](https://github.com/njoaco/juno-model)
+- [X] Improve prediction accuracy with [machine learning models.](https://github.com/njoaco/juno-model)
 
 ## License
 

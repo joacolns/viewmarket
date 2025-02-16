@@ -17,6 +17,7 @@ import AIAssistant from './components/AI/AIAssistant';
 import ThemeToggle from './components/Themes/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
 import NewsWindow from './components/News/NewsWindown';
+import Juno from './components/Juno/Juno';
 
 function Home() {
   const [mode, setMode] = useState('crypto');
@@ -72,6 +73,8 @@ function Home() {
           />
         )}
       </div>
+
+      <Juno />
 
       <NewsWindow query={mode === 'crypto' ? 'cryptocurrency' : 'stocks'} />
 
