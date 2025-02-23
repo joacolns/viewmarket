@@ -5,6 +5,7 @@ const ProfitLossCalculator = () => {
   const [open, setOpen] = useState(false);
   const [token, setToken] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
+  const [usdAmount, setUsdAmount] = useState('');
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,19 +30,24 @@ const ProfitLossCalculator = () => {
   };
 
   const handleAdd = async () => {
-    if (!token || !purchasePrice) return;
+    if (!token || !purchasePrice || !usdAmount) return;
     setLoading(true);
     setError('');
     const currentPrice = await fetchPrice(token.toUpperCase());
     if (currentPrice !== null) {
+      // Calculamos el número de tokens comprados
+      const tokensBought = parseFloat(usdAmount) / parseFloat(purchasePrice);
       const newEntry = {
         token: token.toUpperCase(),
         purchasePrice: parseFloat(purchasePrice),
+        usdAmount: parseFloat(usdAmount),
+        tokensBought,
         currentPrice,
       };
       setEntries([...entries, newEntry]);
       setToken('');
       setPurchasePrice('');
+      setUsdAmount('');
     }
     setLoading(false);
   };
@@ -72,7 +78,14 @@ const ProfitLossCalculator = () => {
               type="number"
               value={purchasePrice}
               onChange={(e) => setPurchasePrice(e.target.value)}
-              placeholder="Precio de compra"
+              placeholder="Precio de compra por token"
+              className="w-full p-2 border rounded mb-2"
+            />
+            <input
+              type="number"
+              value={usdAmount}
+              onChange={(e) => setUsdAmount(e.target.value)}
+              placeholder="Monto invertido en USD"
               className="w-full p-2 border rounded"
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -89,15 +102,21 @@ const ProfitLossCalculator = () => {
               <p className="text-gray-500 text-sm">No hay entradas agregadas.</p>
             ) : (
               entries.map((entry, index) => {
-                const diff = entry.currentPrice - entry.purchasePrice;
-                const diffPercentage = ((diff / entry.purchasePrice) * 100).toFixed(2);
+                // Número de tokens y cálculo del valor actual de la inversión
+                const currentValue = entry.tokensBought * entry.currentPrice;
+                const profitLoss = currentValue - entry.usdAmount;
+                const profitLossPercentage = ((profitLoss / entry.usdAmount) * 100).toFixed(2);
                 return (
                   <div key={index} className="p-2 border-b border-gray-200 last:border-0">
                     <p className="font-semibold">{entry.token}</p>
-                    <p className="text-sm">Comprado a: ${entry.purchasePrice.toFixed(2)}</p>
+                    <p className="text-sm">Precio de compra: ${entry.purchasePrice.toFixed(2)} por token</p>
+                    <p className="text-sm">Monto invertido: ${entry.usdAmount.toFixed(2)}</p>
                     <p className="text-sm">Precio actual: ${entry.currentPrice.toFixed(2)}</p>
-                    <p className={`text-sm ${diff >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                      {diff >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(diff).toFixed(2)} ({diffPercentage}%)
+                    <p className="text-sm">
+                      Tokens comprados: {entry.tokensBought.toFixed(4)}
+                    </p>
+                    <p className={`text-sm ${profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {profitLoss >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
                     </p>
                   </div>
                 );
