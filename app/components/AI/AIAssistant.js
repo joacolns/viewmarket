@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaRobot } from 'react-icons/fa';
 
 const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
@@ -13,7 +13,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const assetType = mode;
   const assetLabel = asset && asset.trim() !== '' ? asset : 'Símbolo no disponible';
 
-  const getAIAnalysis = async (options = {}) => {
+  const getAIAnalysis = useCallback(async (options = {}) => {
     setAnalysis('');
     setIsLoading(true);
     try {
@@ -31,14 +31,14 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
           holdQuery: options.holdQuery || false
         })
       });
-
+  
       const contentType = response.headers.get('content-type');
       if (!contentType?.includes('application/json')) {
         const rawResponse = await response.text();
         console.error('Respuesta no JSON:', rawResponse);
         throw new Error('Formato de respuesta inválido');
       }
-
+  
       const data = await response.json();
       setAnalysis(data.analysis?.replace(/la acción/gi, assetType) || `No se pudo generar un análisis para ${assetLabel}`);
     } catch (error) {
@@ -46,13 +46,13 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
       setAnalysis(`Error: ${error.message}`);
     }
     setIsLoading(false);
-  };
-
+  }, [assetLabel, mode, price, indicators, change24h]);
+  
   useEffect(() => {
     if (isOpen) {
       getAIAnalysis();
     }
-  }, [asset, mode, isOpen]);
+  }, [asset, mode, isOpen, getAIAnalysis]);
 
    return (
     <div className="fixed bottom-4 right-4 z-50">
