@@ -100,6 +100,12 @@ const ProfitLossCalculator = () => {
     return total + (currentValue - entry.usdAmount);
   }, 0);
 
+  const inputStyle = {
+    backgroundColor: 'var(--card-bg)',
+    color: 'var(--card-text)',
+    border: '1px solid var(--card-text)'
+  };
+
   return (
     <>
       <button
@@ -126,6 +132,7 @@ const ProfitLossCalculator = () => {
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Etiqueta personalizada"
               className="w-full p-2 rounded mb-2"
+              style={inputStyle}
             />
             <input
               type="text"
@@ -136,6 +143,7 @@ const ProfitLossCalculator = () => {
               }}
               placeholder="Cripto (Ej: BTC)"
               className="w-full p-2 rounded mb-2"
+              style={inputStyle}
             />
             <input
               type="text"
@@ -146,6 +154,7 @@ const ProfitLossCalculator = () => {
               }}
               placeholder="Stock (Ej: TSLA)"
               className="w-full p-2 rounded mb-2"
+              style={inputStyle}
             />
             <input
               type="number"
@@ -153,6 +162,7 @@ const ProfitLossCalculator = () => {
               onChange={(e) => setPurchasePrice(e.target.value)}
               placeholder="Precio de compra"
               className="w-full p-2 rounded mb-2"
+              style={inputStyle}
             />
             <input
               type="number"
@@ -160,6 +170,7 @@ const ProfitLossCalculator = () => {
               onChange={(e) => setUsdAmount(e.target.value)}
               placeholder="Monto invertido en USD"
               className="w-full p-2 rounded"
+              style={inputStyle}
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
