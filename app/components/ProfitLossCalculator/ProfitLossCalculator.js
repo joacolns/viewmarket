@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { FaStickyNote, FaTrash } from 'react-icons/fa';
+import { FaStickyNote, FaTrash, FaPencilAlt } from 'react-icons/fa';
 
 const ProfitLossCalculator = () => {
   const [mounted, setMounted] = useState(false);
@@ -13,6 +13,15 @@ const ProfitLossCalculator = () => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editForm, setEditForm] = useState({
+    label: '',
+    token: '',
+    type: 'crypto',
+    purchasePrice: '',
+    usdAmount: ''
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -91,6 +100,49 @@ const ProfitLossCalculator = () => {
 
   const handleDelete = (index) => {
     setEntries((prevEntries) => prevEntries.filter((_, i) => i !== index));
+  };
+
+  const handleEditClick = (index) => {
+    const entry = entries[index];
+    setEditingIndex(index);
+    setEditForm({
+      label: entry.label,
+      token: entry.token,
+      type: entry.type,
+      purchasePrice: entry.purchasePrice,
+      usdAmount: entry.usdAmount
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editForm.token || !editForm.purchasePrice || !editForm.usdAmount || !editForm.label) return;
+    setLoading(true);
+    setError('');
+    const currentPrice = await fetchPrice(editForm.token.toUpperCase(), editForm.type);
+    if (currentPrice !== null) {
+      const tokensBought = parseFloat(editForm.usdAmount) / parseFloat(editForm.purchasePrice);
+      const updatedEntry = {
+        label: editForm.label,
+        token: editForm.token.toUpperCase(),
+        type: editForm.type,
+        purchasePrice: parseFloat(editForm.purchasePrice),
+        usdAmount: parseFloat(editForm.usdAmount),
+        tokensBought,
+        currentPrice,
+      };
+      setEntries((prevEntries) =>
+        prevEntries.map((entry, i) => (i === editingIndex ? updatedEntry : entry))
+      );
+      setEditingIndex(null);
+      setEditForm({
+        label: '',
+        token: '',
+        type: 'crypto',
+        purchasePrice: '',
+        usdAmount: ''
+      });
+    }
+    setLoading(false);
   };
 
   if (!mounted) return null;
@@ -196,7 +248,74 @@ const ProfitLossCalculator = () => {
               entries.map((entry, index) => {
                 const currentValue = entry.tokensBought * entry.currentPrice;
                 const profitLoss = currentValue - entry.usdAmount;
-                const profitLossPercentage = ((profitLoss / entry.usdAmount) * 100).toFixed(2);
+                if (editingIndex === index) {
+                  return (
+                    <div
+                      key={index}
+                      className="p-2 border-b last:border-0 animate-fade-in"
+                      style={{ borderColor: 'var(--card-text)' }}
+                    >
+                      <input
+                        type="text"
+                        value={editForm.label}
+                        onChange={(e) => setEditForm({ ...editForm, label: e.target.value })}
+                        placeholder="Label"
+                        className="w-full p-1 rounded mb-1"
+                        style={inputStyle}
+                      />
+                      <select
+                        value={editForm.type}
+                        onChange={(e) => setEditForm({ ...editForm, type: e.target.value })}
+                        className="w-full p-1 rounded mb-1"
+                        style={inputStyle}
+                      >
+                        <option value="crypto">Crypto</option>
+                        <option value="stock">Stock</option>
+                      </select>
+                      <input
+                        type="text"
+                        value={editForm.token}
+                        onChange={(e) => setEditForm({ ...editForm, token: e.target.value })}
+                        placeholder="Token / Symbol"
+                        className="w-full p-1 rounded mb-1"
+                        style={inputStyle}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        value={editForm.purchasePrice}
+                        onChange={(e) => setEditForm({ ...editForm, purchasePrice: e.target.value })}
+                        placeholder="Purchase Price"
+                        className="w-full p-1 rounded mb-1"
+                        style={inputStyle}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        value={editForm.usdAmount}
+                        onChange={(e) => setEditForm({ ...editForm, usdAmount: e.target.value })}
+                        placeholder="Investment ($USD)"
+                        className="w-full p-1 rounded mb-1"
+                        style={inputStyle}
+                      />
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={handleSaveEdit}
+                          className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
+                          disabled={loading}
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditingIndex(null)}
+                          className="bg-gray-500 text-white p-1 rounded hover:bg-gray-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <div
                     key={index}
@@ -216,9 +335,14 @@ const ProfitLossCalculator = () => {
                         {profitLoss >= 0 ? 'Profit' : 'Loss'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
                       </p>
                     </div>
-                    <button onClick={() => handleDelete(index)} className="ml-4 text-red-500 hover:text-red-700">
-                      <FaTrash />
-                    </button>
+                    <div className="flex flex-col space-y-1 ml-4">
+                      <button onClick={() => handleEditClick(index)} className="text-blue-500 hover:text-blue-700">
+                        <FaPencilAlt />
+                      </button>
+                      <button onClick={() => handleDelete(index)} className="text-red-500 hover:text-red-700">
+                        <FaTrash />
+                      </button>
+                    </div>
                   </div>
                 );
               })
