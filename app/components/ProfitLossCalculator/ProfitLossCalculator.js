@@ -158,16 +158,24 @@ const ProfitLossCalculator = () => {
             />
             <input
               type="number"
+              min="0"
               value={purchasePrice}
-              onChange={(e) => setPurchasePrice(e.target.value)}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setPurchasePrice(value < 0 ? 0 : value);
+              }}
               placeholder="Price"
               className="w-full p-2 rounded mb-2"
               style={inputStyle}
             />
             <input
               type="number"
+              min="0"
               value={usdAmount}
-              onChange={(e) => setUsdAmount(e.target.value)}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setUsdAmount(value < 0 ? 0 : value);
+              }}
               placeholder="Investment ($USD)"
               className="w-full p-2 rounded"
               style={inputStyle}
