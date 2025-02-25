@@ -7,7 +7,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Modo:", mode, "Activo:", asset);
+    console.log("Mode:", mode, "Asset:", asset);
   }, [mode, asset]);
 
   const assetType = mode;
@@ -89,13 +89,13 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
                            font-size: 0.875rem;
                            margin-bottom: 0.5rem;
                          }">
-            Análisis de {assetLabel}
+            {assetLabel} Analysis
           </h3>
 
           {isLoading ? (
             <div className="animate-pulse space-y-2">
               <div className="h-4 rounded w-3/4" style={{ backgroundColor: 'var(--secondary)' }}>
-                Generando análisis...
+                Generating...
               </div>
             </div>
           ) : (
@@ -129,7 +129,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
                            line-height: 1.2;
                          }"
             >
-              ¿Cual será el precio a final de este mes?
+              What will the price be at the end of this month?
             </button>
 
             <button 
@@ -141,7 +141,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
                            line-height: 1.2;
                          }"
             >
-              ¿Compro o vendo?
+              Do I buy or sell?
             </button>
 
             <button 
@@ -153,7 +153,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
                            grid-column: span 2;
                          }"
             >
-              ¿Mantengo?
+              Do I hold?
             </button>
           </div>
           
@@ -163,7 +163,7 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
                            margin-top: 0.5rem;
                          }" 
                style={{ color: 'var(--secondary)' }}>
-            * Análisis generado por IA
+            * AI-generated analysis
           </div>
         </div>
       )}

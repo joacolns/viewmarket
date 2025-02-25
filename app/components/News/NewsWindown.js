@@ -8,7 +8,6 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
 
   return (
     <div className="fixed bottom-36 right-4 z-50">
-      {/* Botón para abrir/cerrar la ventana de noticias */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all transform hover:scale-110 focus:outline-none"
@@ -17,7 +16,6 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
         <FaNewspaper />
       </button>
 
-      {/* Ventana desplegable de noticias */}
       {isOpen && (
         <div
           className="absolute bottom-20 right-0 w-80 rounded-xl shadow-2xl p-4 border animate-slide-up-fade-in max-h-[60vh] overflow-y-auto"
@@ -26,10 +24,10 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
             color: 'var(--card-text)',
           }}
         >
-          <h3 className="text-lg font-bold mb-4">Últimas Noticias</h3>
+          <h3 className="text-lg font-bold mb-4">News</h3>
 
           {loading && (
-            <p className="animate-pulse text-sm">Cargando noticias...</p>
+            <p className="animate-pulse text-sm">Loading...</p>
           )}
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
@@ -53,7 +51,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
               ))}
             </ul>
           )}
-          <div className="mt-4 text-xs text-gray-400">* Noticias de NewsAPI</div>
+          <div className="mt-4 text-xs text-gray-400">* NewsAPI's news</div>
         </div>
       )}
     </div>
