@@ -6,48 +6,51 @@ const ProfitLossCalculator = () => {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState('');
-  const [token, setToken] = useState('');
+  const [cryptoToken, setCryptoToken] = useState('');
+  const [stockSymbol, setStockSymbol] = useState('');
   const [purchasePrice, setPurchasePrice] = useState('');
   const [usdAmount, setUsdAmount] = useState('');
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Asegurarse de que se renderice solo en el cliente
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Cargar datos de localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedEntries = localStorage.getItem('profitLossEntries');
-      console.log('Cargando desde localStorage:', storedEntries);
       if (storedEntries) {
         setEntries(JSON.parse(storedEntries));
       }
     }
   }, []);
 
-  // Guardar en localStorage cada vez que cambian las entradas
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log('Guardando en localStorage:', entries);
       localStorage.setItem('profitLossEntries', JSON.stringify(entries));
     }
   }, [entries]);
 
-  // Función para obtener el precio actual de la crypto usando CryptoCompare
-  const fetchPrice = async (tokenSymbol) => {
+  const fetchPrice = async (symbol, type) => {
     try {
-      const response = await fetch(
-        `https://min-api.cryptocompare.com/data/price?fsym=${tokenSymbol}&tsyms=USD`
-      );
-      const data = await response.json();
-      if (data.USD) {
-        return data.USD;
+      if (type === 'crypto') {
+        const response = await fetch(
+          `https://min-api.cryptocompare.com/data/price?fsym=${symbol.toUpperCase()}&tsyms=USD`
+        );
+        const data = await response.json();
+        if (data.USD) return data.USD;
+        else throw new Error('Precio no encontrado');
       } else {
-        throw new Error('Precio no encontrado');
+        const response = await fetch('backend/api/stocks', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stock: symbol.toUpperCase() }),
+        });
+        const data = await response.json();
+        if (data.price) return data.price;
+        else throw new Error('Precio no encontrado');
       }
     } catch (err) {
       console.error(err);
@@ -57,25 +60,29 @@ const ProfitLossCalculator = () => {
   };
 
   const handleAdd = async () => {
+    const token = cryptoToken || stockSymbol;
+    const type = cryptoToken ? 'crypto' : 'stock';
+
     if (!token || !purchasePrice || !usdAmount || !label) return;
     setLoading(true);
     setError('');
-    const currentPrice = await fetchPrice(token.toUpperCase());
+    
+    const currentPrice = await fetchPrice(token.toUpperCase(), type);
     if (currentPrice !== null) {
-      // Calculamos tokens comprados
       const tokensBought = parseFloat(usdAmount) / parseFloat(purchasePrice);
       const newEntry = {
         label,
         token: token.toUpperCase(),
+        type,
         purchasePrice: parseFloat(purchasePrice),
         usdAmount: parseFloat(usdAmount),
         tokensBought,
         currentPrice,
       };
-      console.log('Agregando entrada:', newEntry);
       setEntries((prevEntries) => [...prevEntries, newEntry]);
       setLabel('');
-      setToken('');
+      setCryptoToken('');
+      setStockSymbol('');
       setPurchasePrice('');
       setUsdAmount('');
     }
@@ -83,18 +90,18 @@ const ProfitLossCalculator = () => {
   };
 
   const handleDelete = (index) => {
-    setEntries((prevEntries) => {
-      const updatedEntries = prevEntries.filter((_, i) => i !== index);
-      console.log('Eliminando entrada:', updatedEntries);
-      return updatedEntries;
-    });
+    setEntries((prevEntries) => prevEntries.filter((_, i) => i !== index));
   };
 
   if (!mounted) return null;
 
+  const totalProfitLoss = entries.reduce((total, entry) => {
+    const currentValue = entry.tokensBought * entry.currentPrice;
+    return total + (currentValue - entry.usdAmount);
+  }, 0);
+
   return (
     <>
-      {/* Botón fijo en la esquina inferior izquierda */}
       <button
         className="fixed bottom-4 left-4 bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none z-50"
         onClick={() => setOpen(!open)}
@@ -102,7 +109,6 @@ const ProfitLossCalculator = () => {
         <FaStickyNote size={24} />
       </button>
 
-      {/* Ventana emergente con animación */}
       {open && (
         <div
           className="fixed bottom-20 left-4 w-80 rounded-lg shadow-2xl p-4 z-50 animate-slide-up-fade-in"
@@ -120,35 +126,33 @@ const ProfitLossCalculator = () => {
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Etiqueta personalizada"
               className="w-full p-2 rounded mb-2"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                color: 'var(--card-text)',
-                border: '1px solid var(--card-text)',
-              }}
             />
             <input
               type="text"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="Token (Ej: BTC)"
-              className="w-full p-2 rounded mb-2"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                color: 'var(--card-text)',
-                border: '1px solid var(--card-text)',
+              value={cryptoToken}
+              onChange={(e) => {
+                setCryptoToken(e.target.value);
+                setStockSymbol('');
               }}
+              placeholder="Cripto (Ej: BTC)"
+              className="w-full p-2 rounded mb-2"
+            />
+            <input
+              type="text"
+              value={stockSymbol}
+              onChange={(e) => {
+                setStockSymbol(e.target.value);
+                setCryptoToken('');
+              }}
+              placeholder="Stock (Ej: TSLA)"
+              className="w-full p-2 rounded mb-2"
             />
             <input
               type="number"
               value={purchasePrice}
               onChange={(e) => setPurchasePrice(e.target.value)}
-              placeholder="Precio de compra por token"
+              placeholder="Precio de compra"
               className="w-full p-2 rounded mb-2"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                color: 'var(--card-text)',
-                border: '1px solid var(--card-text)',
-              }}
             />
             <input
               type="number"
@@ -156,11 +160,6 @@ const ProfitLossCalculator = () => {
               onChange={(e) => setUsdAmount(e.target.value)}
               placeholder="Monto invertido en USD"
               className="w-full p-2 rounded"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-                color: 'var(--card-text)',
-                border: '1px solid var(--card-text)',
-              }}
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button
@@ -186,12 +185,14 @@ const ProfitLossCalculator = () => {
                     style={{ borderColor: 'var(--card-text)' }}
                   >
                     <div>
-                      <p className="font-semibold">{entry.label}</p>
-                      <p className="text-sm">Token: {entry.token}</p>
-                      <p className="text-sm">Precio de compra: ${entry.purchasePrice.toFixed(2)} por token</p>
+                      <p className="font-semibold">
+                        {entry.label} ({entry.type === 'crypto' ? 'Cripto' : 'Stock'})
+                      </p>
+                      <p className="text-sm">Símbolo: {entry.token}</p>
+                      <p className="text-sm">Precio de compra: ${entry.purchasePrice.toFixed(2)}</p>
                       <p className="text-sm">Monto invertido: ${entry.usdAmount.toFixed(2)}</p>
                       <p className="text-sm">Precio actual: ${entry.currentPrice.toFixed(2)}</p>
-                      <p className="text-sm">Tokens comprados: {entry.tokensBought.toFixed(4)}</p>
+                      <p className="text-sm">Cantidad comprada: {entry.tokensBought.toFixed(4)}</p>
                       <p className={`text-sm ${profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                         {profitLoss >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
                       </p>
@@ -203,6 +204,12 @@ const ProfitLossCalculator = () => {
                 );
               })
             )}
+          </div>
+          <div className="mt-4 p-2 text-center border-t" style={{ borderColor: 'var(--card-text)' }}>
+            <p className="font-semibold">Total:</p>
+            <p className={`text-lg font-bold ${totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              {totalProfitLoss >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(totalProfitLoss).toFixed(2)}
+            </p>
           </div>
         </div>
       )}
