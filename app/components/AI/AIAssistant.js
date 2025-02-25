@@ -31,14 +31,14 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
           holdQuery: options.holdQuery || false
         })
       });
-  
+
       const contentType = response.headers.get('content-type');
       if (!contentType?.includes('application/json')) {
         const rawResponse = await response.text();
         console.error('Respuesta no JSON:', rawResponse);
         throw new Error('Formato de respuesta inválido');
       }
-  
+
       const data = await response.json();
       setAnalysis(data.analysis?.replace(/la acción/gi, assetType) || `No se pudo generar un análisis para ${assetLabel}`);
     } catch (error) {
@@ -46,15 +46,15 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
       setAnalysis(`Error: ${error.message}`);
     }
     setIsLoading(false);
-  }, [assetLabel, mode, price, indicators, change24h]);
-  
+  }, [assetLabel, mode, price, indicators, change24h, assetType]); // ✅ Agregado assetType
+
   useEffect(() => {
     if (isOpen) {
       getAIAnalysis();
     }
-  }, [asset, mode, isOpen, getAIAnalysis]);
+  }, [asset, mode, isOpen, getAIAnalysis]); // ✅ Dependencias corregidas
 
-   return (
+  return (
     <div className="fixed bottom-4 right-4 z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -66,29 +66,14 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
       {isOpen && (
         <div
           className="absolute bottom-20 right-0 w-80 rounded-lg shadow-2xl p-4 border animate-slide-up-fade-in
-                     max-h-[60vh] overflow-y-auto
-                     /* Estilos específicos para móviles en horizontal */
-                     @media (max-width: 767px) and (orientation: landscape): {
-                       position: fixed;
-                       bottom: 1rem;
-                       left: 50%;
-                       transform: translateX(-50%);
-                       width: 95vw;
-                       max-width: 95vw;
-                       max-height: 80vh;
-                       padding: 0.75rem;
-                     }"
+                     max-h-[60vh] overflow-y-auto"
           style={{
             backgroundColor: 'var(--card-bg)',
             color: 'var(--card-text)',
             borderColor: 'var(--secondary)',
           }}
         >
-          <h3 className="text-lg font-bold mb-4 
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           font-size: 0.875rem;
-                           margin-bottom: 0.5rem;
-                         }">
+          <h3 className="text-lg font-bold mb-4">
             {assetLabel} Analysis
           </h3>
 
@@ -99,70 +84,38 @@ const AIAssistant = ({ asset, mode, price, indicators, change24h }) => {
               </div>
             </div>
           ) : (
-            <div className="max-h-[50vh] overflow-y-auto
-                           @media (max-width: 767px) and (orientation: landscape): {
-                             max-height: 65vh;
-                           }">
-              <p className="animate-fade-in text-sm
-                           @media (max-width: 767px) and (orientation: landscape): {
-                             font-size: 0.75rem;
-                           }" 
+            <div className="max-h-[50vh] overflow-y-auto">
+              <p className="animate-fade-in text-sm" 
                  style={{ color: 'var(--card-text)' }}>
                 {analysis}
               </p>
             </div>
           )}
 
-          <div className="mt-3 space-y-2
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           display: grid;
-                           grid-template-columns: repeat(2, 1fr);
-                           gap: 0.5rem;
-                           margin-top: 0.5rem;
-                         }">
+          <div className="mt-3 space-y-2">
             <button 
               onClick={() => getAIAnalysis({ predictionMode: true })} 
-              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           font-size: 0.65rem;
-                           padding: 0.35rem;
-                           line-height: 1.2;
-                         }"
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700"
             >
               What will the price be at the end of this month?
             </button>
 
             <button 
               onClick={() => getAIAnalysis({ actionQuery: true })} 
-              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           font-size: 0.65rem;
-                           padding: 0.35rem;
-                           line-height: 1.2;
-                         }"
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700"
             >
               Do I buy or sell?
             </button>
 
             <button 
               onClick={() => getAIAnalysis({ holdQuery: true })} 
-              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           font-size: 0.65rem;
-                           padding: 0.35rem;
-                           grid-column: span 2;
-                         }"
+              className="w-full bg-blue-600 text-white p-2 rounded-xl transition-transform transform hover:scale-105 hover:bg-blue-700"
             >
               Do I hold?
             </button>
           </div>
           
-          <div className="mt-4 text-xs
-                         @media (max-width: 767px) and (orientation: landscape): {
-                           font-size: 0.6rem;
-                           margin-top: 0.5rem;
-                         }" 
-               style={{ color: 'var(--secondary)' }}>
+          <div className="mt-4 text-xs" style={{ color: 'var(--secondary)' }}>
             * AI-generated analysis
           </div>
         </div>

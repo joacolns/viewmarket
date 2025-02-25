@@ -51,7 +51,7 @@ const NewsWindow = ({ query = 'cryptocurrency' }) => {
               ))}
             </ul>
           )}
-          <div className="mt-4 text-xs text-gray-400">* NewsAPI's news</div>
+          <div className="mt-4 text-xs text-gray-400">* NewsAPI&rsquo;s news</div> {/* Apóstrofe escapado */}
         </div>
       )}
     </div>
