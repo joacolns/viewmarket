@@ -124,13 +124,13 @@ const ProfitLossCalculator = () => {
             border: '1px solid var(--card-text)',
           }}
         >
-          <h2 className="text-lg font-bold mb-4">Calculadora de Ganancias/Pérdidas</h2>
+          <h2 className="text-lg font-bold mb-4">Portfolio & P/L Calculator</h2>
           <div className="mb-4">
             <input
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder="Etiqueta personalizada"
+              placeholder="Label"
               className="w-full p-2 rounded mb-2"
               style={inputStyle}
             />
@@ -141,7 +141,7 @@ const ProfitLossCalculator = () => {
                 setCryptoToken(e.target.value);
                 setStockSymbol('');
               }}
-              placeholder="Cripto (Ej: BTC)"
+              placeholder="Crypto (Eg: BTC)"
               className="w-full p-2 rounded mb-2"
               style={inputStyle}
             />
@@ -152,7 +152,7 @@ const ProfitLossCalculator = () => {
                 setStockSymbol(e.target.value);
                 setCryptoToken('');
               }}
-              placeholder="Stock (Ej: TSLA)"
+              placeholder="Stock (Eg: TSLA)"
               className="w-full p-2 rounded mb-2"
               style={inputStyle}
             />
@@ -160,7 +160,7 @@ const ProfitLossCalculator = () => {
               type="number"
               value={purchasePrice}
               onChange={(e) => setPurchasePrice(e.target.value)}
-              placeholder="Precio de compra"
+              placeholder="Price"
               className="w-full p-2 rounded mb-2"
               style={inputStyle}
             />
@@ -168,7 +168,7 @@ const ProfitLossCalculator = () => {
               type="number"
               value={usdAmount}
               onChange={(e) => setUsdAmount(e.target.value)}
-              placeholder="Monto invertido en USD"
+              placeholder="Investment ($USD)"
               className="w-full p-2 rounded"
               style={inputStyle}
             />
@@ -178,12 +178,12 @@ const ProfitLossCalculator = () => {
               onClick={handleAdd}
               disabled={loading}
             >
-              {loading ? 'Agregando...' : 'Agregar'}
+              {loading ? 'Adding...' : 'Add'}
             </button>
           </div>
           <div className="max-h-60 overflow-y-auto">
             {entries.length === 0 ? (
-              <p className="text-gray-500 text-sm">No hay entradas agregadas.</p>
+              <p className="text-gray-500 text-sm">No entries.</p>
             ) : (
               entries.map((entry, index) => {
                 const currentValue = entry.tokensBought * entry.currentPrice;
@@ -197,15 +197,15 @@ const ProfitLossCalculator = () => {
                   >
                     <div>
                       <p className="font-semibold">
-                        {entry.label} ({entry.type === 'crypto' ? 'Cripto' : 'Stock'})
+                        {entry.label} ({entry.type === 'crypto' ? 'Crypto' : 'Stock'})
                       </p>
-                      <p className="text-sm">Símbolo: {entry.token}</p>
-                      <p className="text-sm">Precio de compra: ${entry.purchasePrice.toFixed(2)}</p>
-                      <p className="text-sm">Monto invertido: ${entry.usdAmount.toFixed(2)}</p>
-                      <p className="text-sm">Precio actual: ${entry.currentPrice.toFixed(2)}</p>
-                      <p className="text-sm">Cantidad comprada: {entry.tokensBought.toFixed(4)}</p>
+                      <p className="text-sm">Symbol: {entry.token}</p>
+                      <p className="text-sm">Purchase price: ${entry.purchasePrice.toFixed(2)}</p>
+                      <p className="text-sm">Amount invested: ${entry.usdAmount.toFixed(2)}</p>
+                      <p className="text-sm">Actual price: ${entry.currentPrice.toFixed(2)}</p>
+                      <p className="text-sm">Purchased quantity: {entry.tokensBought.toFixed(4)}</p>
                       <p className={`text-sm ${profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {profitLoss >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
+                        {profitLoss >= 0 ? 'Profit' : 'Loss'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
                       </p>
                     </div>
                     <button onClick={() => handleDelete(index)} className="ml-4 text-red-500 hover:text-red-700">
@@ -219,7 +219,7 @@ const ProfitLossCalculator = () => {
           <div className="mt-4 p-2 text-center border-t" style={{ borderColor: 'var(--card-text)' }}>
             <p className="font-semibold">Total:</p>
             <p className={`text-lg font-bold ${totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {totalProfitLoss >= 0 ? 'Ganancia' : 'Pérdida'}: ${Math.abs(totalProfitLoss).toFixed(2)}
+              {totalProfitLoss >= 0 ? 'Profit' : 'Loss'}: ${Math.abs(totalProfitLoss).toFixed(2)}
             </p>
           </div>
         </div>
