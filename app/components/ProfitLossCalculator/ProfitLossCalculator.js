@@ -160,8 +160,8 @@ const ProfitLossCalculator = () => {
 
   return (
     <>
-      <button
-        className="fixed bottom-4 left-4 bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none z-50"
+      <button 
+        className="fixed bottom-4 left-4 bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-full shadow-lg transition-transform duration-200 transform scale-90 hover:scale-110 focus:outline-none z-50"
         onClick={() => setOpen(!open)}
       >
         <FaStickyNote size={24} />
