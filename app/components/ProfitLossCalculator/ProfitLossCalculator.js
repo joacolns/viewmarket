@@ -160,8 +160,8 @@ const ProfitLossCalculator = () => {
 
   return (
     <>
-      <button 
-        className="fixed bottom-4 left-4 bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-full shadow-lg transition-transform duration-200 transform scale-90 hover:scale-110 focus:outline-none z-50"
+      <button
+        className="fixed bottom-4 left-4 bg-yellow-500 hover:bg-yellow-600 text-white p-4 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none z-50"
         onClick={() => setOpen(!open)}
       >
         <FaStickyNote size={24} />
@@ -248,6 +248,10 @@ const ProfitLossCalculator = () => {
               entries.map((entry, index) => {
                 const currentValue = entry.tokensBought * entry.currentPrice;
                 const profitLoss = currentValue - entry.usdAmount;
+                const profitLossPercentage = entry.usdAmount 
+                  ? ((profitLoss / entry.usdAmount) * 100).toFixed(2)
+                  : '0.00';
+                  
                 if (editingIndex === index) {
                   return (
                     <div
@@ -331,15 +335,26 @@ const ProfitLossCalculator = () => {
                       <p className="text-sm">Amount invested: ${entry.usdAmount.toFixed(2)}</p>
                       <p className="text-sm">Actual price: ${entry.currentPrice.toFixed(2)}</p>
                       <p className="text-sm">Purchased quantity: {entry.tokensBought.toFixed(4)}</p>
-                      <p className={`text-sm ${profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      <p
+                        className={`text-sm ${profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}
+                        style={{ backgroundColor: 'transparent' }}
+                      >
                         {profitLoss >= 0 ? 'Profit' : 'Loss'}: ${Math.abs(profitLoss).toFixed(2)} ({profitLossPercentage}%)
                       </p>
                     </div>
                     <div className="flex flex-col space-y-1 ml-4">
-                      <button onClick={() => handleEditClick(index)} className="text-blue-500 hover:text-blue-700">
+                      <button 
+                        onClick={() => handleEditClick(index)} 
+                        className="text-blue-500 hover:text-blue-700 mb-5" 
+                        style={{ backgroundColor: 'transparent' }}
+                      >
                         <FaPencilAlt />
                       </button>
-                      <button onClick={() => handleDelete(index)} className="text-red-500 hover:text-red-700">
+                      <button 
+                        onClick={() => handleDelete(index)} 
+                        className="text-red-500 hover:text-red-700" 
+                        style={{ backgroundColor: 'transparent' }}
+                      >
                         <FaTrash />
                       </button>
                     </div>
@@ -350,7 +365,10 @@ const ProfitLossCalculator = () => {
           </div>
           <div className="mt-4 p-2 text-center border-t" style={{ borderColor: 'var(--card-text)' }}>
             <p className="font-semibold">Total:</p>
-            <p className={`text-lg font-bold ${totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <p
+              className={`text-lg font-bold ${totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}
+              style={{ backgroundColor: 'transparent' }}
+            >
               {totalProfitLoss >= 0 ? 'Profit' : 'Loss'}: ${Math.abs(totalProfitLoss).toFixed(2)}
             </p>
           </div>
