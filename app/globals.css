@@ -17,11 +17,13 @@
 }
 
 [data-theme="dark"] {
-  --background: #131a1b; /* Fondo oscuro */
-  --foreground: #ededed; /* Texto oscuro */
-  --card-bg: #202a2c; /* Fondo de tarjetas (oscuro) */
-  --card-text: #f3f4f6; /* Texto de tarjetas (oscuro) */
+  --background: #1b1916; /* Fondo oscuro con matiz sepia */
+  --foreground: #EDE0D4; /* Texto claro con tinte cálido */
+  --card-bg: #282624;    /* Fondo de tarjetas en tonos sepia oscuros */
+  --card-text: #F2E7D5;   /* Texto de tarjetas en tono sepia */
 }
+
+
 
 html, body {
   height: 100%; /* Asegura que el html y el body ocupen toda la altura */

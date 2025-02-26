@@ -11,13 +11,13 @@ export async function POST(request) {
     const mode = requestData.mode;
     const assetType = mode === 'crypto' ? 'Criptomoneda' : 'Acción';
     const promptRole = mode === 'crypto'
-      ? "Eres un experto en análisis cripto. Proporciona recomendaciones de inversión concisas (máximo 150 palabras) basadas en estos datos técnicos:"
-      : "Eres un experto en análisis bursátil. Proporciona recomendaciones de inversión concisas (máximo 150 palabras) basadas en estos datos técnicos:";
+      ? "You are an expert in crypto analysis. Provides concise investment recommendations (maximum 150 words) based on this technical data:"
+      : "You are an expert in stock analysis. Provides concise investment recommendations (maximum 150 words) based on this technical data:";
 
     let userPrompt = '';
     if (requestData.predictionMode) {
       userPrompt = `
-        Basado en los siguientes datos técnicos, ¿cuál sería tu predicción de precio para el final de este mes?
+        Based on the following technical data, what would be your price prediction for the end of this month?
         ${assetType}: ${requestData.asset}
         Precio actual: $${requestData.price}
         Cambio 24h: ${requestData.change24h}%
@@ -30,42 +30,41 @@ export async function POST(request) {
       `;
     } else if (requestData.actionQuery) {
       userPrompt = `
-        Basado en los siguientes datos técnicos, ¿compro o vendo? Explica brevemente tu recomendación.
+        Based on the following technical data, do I buy or sell? Briefly explain your recommendation.
         ${assetType}: ${requestData.asset}
-        Precio actual: $${requestData.price}
-        Cambio 24h: ${requestData.change24h}%
+        Actual price: $${requestData.price}
+        24h Change: ${requestData.change24h}%
         RSI: ${requestData.indicators.rsi}
         MACD: ${requestData.indicators.macd}
-        Bandas de Bollinger: 
-          Superior: ${requestData.indicators.bb.upper}
-          Media: ${requestData.indicators.bb.middle}
-          Inferior: ${requestData.indicators.bb.lower}
+        Bollinger Bands: 
+          Upper: ${requestData.indicators.bb.upper}
+          Middle: ${requestData.indicators.bb.middle}
+          Lower: ${requestData.indicators.bb.lower}
       `;
     } else if (requestData.holdQuery) {
       userPrompt = `
-        Basado en los siguientes datos técnicos, ¿mantengo la posición actual? Explica brevemente tu recomendación.
+        Based on the following technical data, do I maintain the current position? Briefly explain your recommendation.
         ${assetType}: ${requestData.asset}
-        Precio actual: $${requestData.price}
-        Cambio 24h: ${requestData.change24h}%
+        Actual price: $${requestData.price}
+        24h Change: ${requestData.change24h}%
         RSI: ${requestData.indicators.rsi}
         MACD: ${requestData.indicators.macd}
-        Bandas de Bollinger: 
-          Superior: ${requestData.indicators.bb.upper}
-          Media: ${requestData.indicators.bb.middle}
-          Inferior: ${requestData.indicators.bb.lower}
+        Bollinger Bands: 
+          Upper: ${requestData.indicators.bb.upper}
+          Middle: ${requestData.indicators.bb.middle}
+          Lower: ${requestData.indicators.bb.lower}
       `;
     } else {
       userPrompt = `
         ${assetType}: ${requestData.asset}
-        Precio actual: $${requestData.price}
-        Cambio 24h: ${requestData.change24h}%
+        Actual price: $${requestData.price}
+        24h Change: ${requestData.change24h}%
         RSI: ${requestData.indicators.rsi}
         MACD: ${requestData.indicators.macd}
-        EMAs: ${requestData.indicators.ema}
-        Bandas de Bollinger: 
-          Superior: ${requestData.indicators.bb.upper}
-          Media: ${requestData.indicators.bb.middle}
-          Inferior: ${requestData.indicators.bb.lower}
+        Bollinger Bands: 
+          Upper: ${requestData.indicators.bb.upper}
+          Middle: ${requestData.indicators.bb.middle}
+          Lower: ${requestData.indicators.bb.lower}
       `;
     }
 
@@ -80,7 +79,7 @@ export async function POST(request) {
       }]
     });
 
-    console.log('Datos recibidos:', {
+    console.log('Data received:', {
       asset: requestData.asset,
       mode: requestData.mode,
       price: requestData.price,
@@ -91,10 +90,10 @@ export async function POST(request) {
     });
 
     if (!completion.choices || completion.choices.length === 0) {
-      throw new Error('La respuesta de OpenAI está vacía');
+      throw new Error('OpenAI response is empty');
     }
 
-    const analysis = completion.choices[0].message.content || 'Análisis no disponible';
+    const analysis = completion.choices[0].message.content || 'Analysis not available';
 
     return new Response(JSON.stringify({ analysis }), {
       headers: { 'Content-Type': 'application/json' },
@@ -102,9 +101,9 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('Error en el backend:', error);
+    console.error('Backend error:', error);
     return new Response(JSON.stringify({ 
-      error: error.message || 'Error interno'
+      error: error.message || 'Internal error'
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

@@ -18,6 +18,7 @@ import ThemeToggle from './components/Themes/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
 import NewsWindow from './components/News/NewsWindown';
 import Juno from './components/Juno/Juno';
+import ProfitLossCalculator from './components/ProfitLossCalculator/ProfitLossCalculator';
 
 function Home() {
   const [mode, setMode] = useState('crypto');
@@ -87,6 +88,8 @@ function Home() {
       />
 
       <ThemeToggle />
+
+      <ProfitLossCalculator />
 
       <SocialIcons />
     </div>
